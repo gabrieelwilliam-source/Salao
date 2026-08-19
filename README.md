@@ -1,41 +1,48 @@
-# Iana Gestão LIVE 2.1.2 — GitHub Pages
+# Iana Gestão LIVE 2.1.3 — CACHE KILLER
 
-Esta versão deixa a conexão com o n8n visível permanentemente.
+Esta versão existe para remover o cache da versão antiga "MODO DEMONSTRAÇÃO".
 
-## Como saber que publicou a versão correta
-No menu lateral deve aparecer:
-`Salão Nayara · LIVE 2.1.2`
+## SUBA TODOS estes arquivos para a RAIZ do repositório
 
-Não pode aparecer:
-`MODO DEMONSTRAÇÃO`
-
-## Onde conectar
-Há dois lugares:
-1. menu lateral: `Conectar / trocar API`
-2. `Iana / Sistema` → `Conexão do painel` → `Conectar / trocar webhook`
-
-Preencha:
-- Production URL do node n8n `API WEB: POST`
-- access_key retornada pelo instalador V2.1
-
-## Arquivos que vão na raiz do GitHub
 - index.html
-- app-live.js
-- styles.css
-- manifest.json
 - 404.html
+- app-live-2.1.3.js
+- styles-2.1.3.css
+- manifest.json
+- service-worker.js
+- version.txt
 - .nojekyll
 
-README é opcional.
+Pode apagar da raiz os antigos:
+- app.js
+- app-live.js
+- styles.css
 
-## GitHub Pages
-Settings → Pages:
-- Deploy from a branch
-- main
-- / (root)
+## Depois do commit
+Espere o GitHub Pages concluir o deploy.
 
-Após o deploy, faça Ctrl+Shift+R.
+Abra PRIMEIRO usando um parâmetro novo:
 
-## Dados
-Não existem dados de exemplo nesta versão. Sem conexão, o painel não entra.
-Conectado, tudo é consultado através do webhook n8n.
+`https://SEU-SITE.github.io/SEU-REPO/?v=213`
+
+Esse endereço não corresponde à entrada antiga que o Service Worker cacheou.
+
+A nova página:
+1. apaga caches antigos;
+2. desregistra Service Workers antigos;
+3. instala temporariamente um Service Worker "cache killer";
+4. o cache killer também se desregistra sozinho.
+
+## Como confirmar
+Você DEVE ver:
+- `Salão Nayara · LIVE 2.1.3` no menu lateral;
+- um selo escuro `LIVE 2.1.3` no canto inferior direito.
+
+A URL:
+`.../version.txt?v=213`
+
+deve mostrar:
+`IANA GESTAO LIVE 2.1.3 CACHE KILLER`
+
+Se `version.txt` mostrar 2.1.3 mas a página continuar demo, é cache local.
+Se `version.txt` der 404 ou conteúdo antigo, o GitHub Pages está publicando branch/pasta diferente da que você atualizou.

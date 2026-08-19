@@ -1,14 +1,24 @@
-SUBSTITUA TODOS OS ARQUIVOS DA RAIZ DO REPOSITÓRIO POR ESTES:
+SUBIR PARA O GITHUB — RAIZ
+============================
 
+OBRIGATÓRIOS:
 index.html
-app-live.js
-styles.css
-manifest.json
 404.html
+app-live-2.1.3.js
+styles-2.1.3.css
+manifest.json
+service-worker.js
+version.txt
 .nojekyll
 
-Depois faça commit no branch main.
+APAGAR ARQUIVOS ANTIGOS (SE EXISTIREM):
+app.js
+app-live.js
+styles.css
 
-CONFIRMAÇÃO:
-O site precisa mostrar "Salão Nayara · LIVE 2.1.2".
-Se mostrar "MODO DEMONSTRAÇÃO", o GitHub ainda está servindo a versão antiga.
+DEPOIS:
+1. Commit no branch configurado no GitHub Pages.
+2. Aguarde Actions/Pages terminar.
+3. Abra o site com ?v=213
+4. Procure o selo LIVE 2.1.3.
+5. Teste /version.txt?v=213.
