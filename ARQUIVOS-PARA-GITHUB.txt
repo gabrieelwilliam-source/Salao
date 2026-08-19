@@ -1,0 +1,25 @@
+ARQUIVOS QUE DEVEM IR PARA O GITHUB
+=====================================
+
+OBRIGATÓRIOS:
+[x] index.html
+[x] app-live.js
+[x] styles.css
+[x] manifest.json
+[x] .nojekyll
+
+RECOMENDADOS:
+[x] 404.html
+[x] README.md
+
+NÃO COLOCAR NO GITHUB:
+[ ] senha PostgreSQL
+[ ] credenciais do n8n
+[ ] access_key preenchida no código
+[ ] arquivos SQL
+[ ] workflow backend JSON
+
+CONFIGURAÇÃO PAGES:
+Source: Deploy from a branch
+Branch: main
+Folder: / (root)

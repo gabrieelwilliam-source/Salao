@@ -1,0 +1,9 @@
+{
+  "name": "Iana Gestão Live 2.1.1",
+  "short_name": "Iana Gestão",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f7f5f7",
+  "theme_color": "#241d2b",
+  "icons": []
+}
