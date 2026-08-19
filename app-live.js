@@ -1,4 +1,4 @@
-window.IANA_WEB_BUILD='2.1.1-github-pages';
+window.IANA_WEB_BUILD='2.1.2-github-pages';
 (() => {
 const LS_URL='iana_n8n_api_url',LS_KEY='iana_n8n_access_key';
 let currentPage='dashboard',currentContact=null,financeScope='today';
@@ -14,6 +14,24 @@ const initials=n=>String(n||'Cliente').split(/\s+/).slice(0,2).map(x=>x[0]||'').
 function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(window.__t);window.__t=setTimeout(()=>t.classList.remove('show'),2500)}
 function gateMsg(m,type=''){const e=$('gateMessage');e.textContent=m;e.className='gate-message '+type}
 function config(){return {url:localStorage.getItem(LS_URL)||'',key:localStorage.getItem(LS_KEY)||''}}
+function maskedUrl(u){if(!u)return 'Não configurado';try{const x=new URL(u);return `${x.origin}${x.pathname}`;}catch(e){return u}}
+function updateConnectionUi(){
+ const c=config();
+ const urlEl=$('currentApiUrl');if(urlEl)urlEl.textContent=maskedUrl(c.url);
+ const status=$('apiConnectionStatus');
+ if(status){status.textContent=c.url&&c.key?'configurada':'não configurada';status.className='secure-pill';}
+}
+function openConnectionSettings(){
+ const c=config();
+ $('apiUrl').value=c.url||'';
+ $('apiKey').value=c.key||'';
+ gateMsg(c.url?'Você pode testar a conexão atual ou substituir os dados.':'Informe os dados do webhook do n8n.');
+ $('setupScreen').classList.remove('hidden');
+}
+function closeConnectionSettings(){
+ if(config().url&&config().key)$('setupScreen').classList.add('hidden');
+}
+
 function humanError(e){const m=String(e?.message||e||'Erro');if(m.includes('unauthorized'))return 'Access key inválida.';if(m.includes('Failed to fetch'))return 'Não consegui acessar o webhook. Confirme a Production URL, workflow ativo e HTTPS/CORS.';return m}
 function setRealtime(ok,label){$('realtimeDot').className='status-dot '+(ok?'online':'offline');$('realtimeLabel').textContent=label;$('realtimeDetail').textContent=label}
 async function api(action,params={}){
@@ -25,7 +43,7 @@ async function api(action,params={}){
 }
 async function boot(){
  const c=config();if(!c.url||!c.key){$('setupScreen').classList.remove('hidden');$('app').classList.add('hidden');return}
- try{const p=await api('ping');lastEventId=Number(p.latest_event_id||0);$('setupScreen').classList.add('hidden');$('app').classList.remove('hidden');$('userLabel').textContent='Nayara';setRealtime(true,'Live · até 3s');await refreshAll(false);startSync()}
+ try{const p=await api('ping');lastEventId=Number(p.latest_event_id||0);$('setupScreen').classList.add('hidden');$('app').classList.remove('hidden');$('userLabel').textContent='Nayara';setRealtime(true,'Live · até 3s');updateConnectionUi();await refreshAll(false);startSync()}
  catch(e){$('setupScreen').classList.remove('hidden');$('app').classList.add('hidden');gateMsg(humanError(e),'error')}
 }
 async function pollChanges(){
@@ -58,11 +76,15 @@ $('saveConnectionBtn').onclick=async()=>{
  const u=$('apiUrl').value.trim().replace(/\/$/,'');const k=$('apiKey').value.trim();
  if(!/^https?:\/\//.test(u)||k.length<20)return gateMsg('Informe a Production URL completa e a access key do instalador.','error');
  localStorage.setItem(LS_URL,u);localStorage.setItem(LS_KEY,k);gateMsg('Testando conexão…');
- try{const p=await api('ping');lastEventId=Number(p.latest_event_id||0);gateMsg('Conectado. Abrindo painel…','good');setTimeout(()=>location.reload(),350)}
+ try{const p=await api('ping');lastEventId=Number(p.latest_event_id||0);gateMsg('Conectado com sucesso.','good');$('setupScreen').classList.add('hidden');$('app').classList.remove('hidden');$('userLabel').textContent='Nayara';setRealtime(true,'Live · até 3s');updateConnectionUi();await refreshAll(false);startSync();toast('Painel conectado aos dados reais.')}
  catch(e){localStorage.removeItem(LS_URL);localStorage.removeItem(LS_KEY);gateMsg(humanError(e),'error')}
 };
-function logout(){localStorage.removeItem(LS_URL);localStorage.removeItem(LS_KEY);location.reload()}
+function logout(){if(!confirm('Desconectar este navegador do painel da Iana?'))return;localStorage.removeItem(LS_URL);localStorage.removeItem(LS_KEY);location.reload()}
 $('logoutBtn').onclick=logout;
+$('connectionBtn').onclick=openConnectionSettings;
+$('connectionBtnSystem').onclick=openConnectionSettings;
+$('testConnectionBtn').onclick=async()=>{try{const p=await api('ping');lastEventId=Number(p.latest_event_id||lastEventId);setRealtime(true,'Live · até 3s');updateConnectionUi();toast('Conexão com o n8n está funcionando.')}catch(e){setRealtime(false,'Falha de conexão');toast('Falha: '+humanError(e))}};
+
 document.querySelectorAll('.nav-item').forEach(b=>b.onclick=()=>gotoPage(b.dataset.page));
 document.querySelectorAll('[data-goto]').forEach(b=>b.onclick=()=>gotoPage(b.dataset.goto));
 $('refreshBtn').onclick=()=>refreshAll(true);
@@ -72,5 +94,6 @@ let qTimer;$('conversationSearch').oninput=()=>{clearTimeout(qTimer);qTimer=setT
 $('clientSearch').oninput=()=>{clearTimeout(qTimer);qTimer=setTimeout(()=>loadClients(),350)};
 document.querySelectorAll('[data-finance]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-finance]').forEach(x=>x.classList.remove('active'));b.classList.add('active');financeScope=b.dataset.finance;loadFinance()});
 $('todayLabel').textContent=new Intl.DateTimeFormat('pt-BR',{weekday:'long',day:'2-digit',month:'long'}).format(new Date()).toUpperCase();
+updateConnectionUi();
 boot();
 })();

@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#241d2b">
-<title>Iana Gestão Live 2.1.1</title>
-<link rel="manifest" href="manifest.json?v=2.1.1"><link rel="stylesheet" href="styles.css?v=2.1.1">
+<title>Iana Gestão Live 2.1.2</title>
+<link rel="manifest" href="manifest.json?v=2.1.2"><link rel="stylesheet" href="styles.css?v=2.1.2">
 </head>
 <body>
 <div id="setupScreen" class="gate-screen">
@@ -24,7 +24,7 @@
 
 <div id="app" class="hidden">
 <aside class="sidebar" id="sidebar">
-  <div class="brand"><div class="brand-mark">I</div><div><div class="brand-name">Iana Gestão</div><div class="brand-sub">Salão Nayara · LIVE 2.1.1</div></div></div>
+  <div class="brand"><div class="brand-mark">I</div><div><div class="brand-name">Iana Gestão</div><div class="brand-sub">Salão Nayara · LIVE 2.1.2</div></div></div>
   <nav class="nav">
     <button class="nav-item active" data-page="dashboard"><span class="ico">⌂</span><span>Dashboard</span></button>
     <button class="nav-item" data-page="conversas"><span class="ico">◫</span><span>Conversas</span></button>
@@ -35,7 +35,11 @@
     <button class="nav-item" data-page="resumos"><span class="ico">✦</span><span>Resumos</span></button>
     <button class="nav-item" data-page="iana"><span class="ico">●</span><span>Iana / Sistema</span></button>
   </nav>
-  <div class="sidebar-footer"><div class="status-row"><span class="status-dot" id="realtimeDot"></span><div><strong id="realtimeLabel">Conectando…</strong><small id="lastSyncLabel">aguardando sincronização</small></div></div><button class="link-btn logout-side" id="logoutBtn">Sair</button></div>
+  <div class="sidebar-footer">
+  <div class="status-row"><span class="status-dot" id="realtimeDot"></span><div><strong id="realtimeLabel">Conectando…</strong><small id="lastSyncLabel">aguardando sincronização</small></div></div>
+  <button class="connection-side-btn" id="connectionBtn">⚙ Conectar / trocar API</button>
+  <button class="link-btn logout-side" id="logoutBtn">Desconectar painel</button>
+</div>
 </aside>
 <main class="main">
 <header class="topbar"><div class="topbar-left"><button class="menu-btn" id="menuBtn">☰</button><div><h1 id="pageTitle">Dashboard</h1><p id="pageSubtitle">Dados reais do salão.</p></div></div><div class="topbar-right"><div class="live-pill"><span class="status-dot online"></span><span>LIVE</span></div><button class="icon-btn" id="refreshBtn">↻</button><div class="profile"><div class="avatar">N</div><div class="profile-copy"><strong id="userLabel">Nayara</strong><small>Administradora</small></div></div></div></header>
@@ -68,10 +72,26 @@
 
   <div class="page" id="page-resumos"><div class="section-intro"><div><h2>Resumos e oportunidades</h2><p>Insights derivados dos registros reais do CRM.</p></div></div><div id="insightsGrid" class="insights-grid loading-block">Carregando…</div></div>
 
-  <div class="page" id="page-iana"><div class="section-intro"><div><h2>Iana / Sistema</h2><p>Saúde do workflow e flags operacionais.</p></div><div class="live-pill"><span class="status-dot online"></span> conectado ao banco</div></div><div class="system-grid"><article class="panel"><div class="panel-head"><div><h3>Status</h3><p>Últimas 24 horas.</p></div></div><div id="healthList" class="health-list loading-block">Carregando…</div></article><article class="panel"><div class="panel-head"><div><h3>Configuração atual</h3><p>Somente leitura nesta versão.</p></div></div><div id="settingsList" class="health-list loading-block">Carregando…</div></article><article class="panel span-2"><div class="panel-head"><div><h3>Realtime</h3><p>O painel consulta eventos novos a cada 3 segundos e atualiza somente o que mudou.</p></div><span class="secure-pill" id="realtimeDetail">conectando</span></div><div class="security-grid"><div><span>✓</span><p><strong>Sem acesso direto</strong> O navegador consulta RPCs seguras.</p></div><div><span>✓</span><p><strong>API protegida</strong> A leitura exige uma chave longa gerada no banco.</p></div><div><span>✓</span><p><strong>Near-live</strong> Mudanças aparecem em até ~3 segundos, sem F5.</p></div><div><span>✓</span><p><strong>Sem Supabase</strong> Funciona com o PostgreSQL atual através do n8n.</p></div></div></article></div></div>
+  <div class="page" id="page-iana"><div class="section-intro"><div><h2>Iana / Sistema</h2><p>Saúde do workflow e flags operacionais.</p></div><div class="live-pill"><span class="status-dot online"></span> conectado ao banco</div></div><div class="system-grid">
+<article class="panel span-2 connection-panel">
+  <div class="panel-head">
+    <div><h3>Conexão do painel</h3><p>API n8n que alimenta este site com os dados reais da Iana.</p></div>
+    <span class="secure-pill" id="apiConnectionStatus">verificando</span>
+  </div>
+  <div class="connection-info-grid">
+    <div><span>Endpoint atual</span><strong id="currentApiUrl">Não configurado</strong></div>
+    <div><span>Atualização</span><strong>até ~3 segundos</strong></div>
+    <div><span>Modo</span><strong>Somente leitura</strong></div>
+  </div>
+  <div class="connection-actions">
+    <button class="btn primary" id="connectionBtnSystem">Conectar / trocar webhook</button>
+    <button class="btn secondary" id="testConnectionBtn">Testar conexão agora</button>
+  </div>
+</article>
+<article class="panel"><div class="panel-head"><div><h3>Status</h3><p>Últimas 24 horas.</p></div></div><div id="healthList" class="health-list loading-block">Carregando…</div></article><article class="panel"><div class="panel-head"><div><h3>Configuração atual</h3><p>Somente leitura nesta versão.</p></div></div><div id="settingsList" class="health-list loading-block">Carregando…</div></article><article class="panel span-2"><div class="panel-head"><div><h3>Realtime</h3><p>O painel consulta eventos novos a cada 3 segundos e atualiza somente o que mudou.</p></div><span class="secure-pill" id="realtimeDetail">conectando</span></div><div class="security-grid"><div><span>✓</span><p><strong>Sem acesso direto</strong> O navegador consulta RPCs seguras.</p></div><div><span>✓</span><p><strong>API protegida</strong> A leitura exige uma chave longa gerada no banco.</p></div><div><span>✓</span><p><strong>Near-live</strong> Mudanças aparecem em até ~3 segundos, sem F5.</p></div><div><span>✓</span><p><strong>Sem Supabase</strong> Funciona com o PostgreSQL atual através do n8n.</p></div></div></article></div></div>
 </section>
 </main>
 </div>
 <div class="drawer-overlay" id="drawerOverlay"></div><div class="toast" id="toast"></div>
-<script src="app-live.js?v=2.1.1"></script>
+<script src="app-live.js?v=2.1.2"></script>
 </body></html>

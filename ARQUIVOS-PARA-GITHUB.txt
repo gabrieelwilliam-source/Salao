@@ -1,25 +1,14 @@
-ARQUIVOS QUE DEVEM IR PARA O GITHUB
-=====================================
+SUBSTITUA TODOS OS ARQUIVOS DA RAIZ DO REPOSITÓRIO POR ESTES:
 
-OBRIGATÓRIOS:
-[x] index.html
-[x] app-live.js
-[x] styles.css
-[x] manifest.json
-[x] .nojekyll
+index.html
+app-live.js
+styles.css
+manifest.json
+404.html
+.nojekyll
 
-RECOMENDADOS:
-[x] 404.html
-[x] README.md
+Depois faça commit no branch main.
 
-NÃO COLOCAR NO GITHUB:
-[ ] senha PostgreSQL
-[ ] credenciais do n8n
-[ ] access_key preenchida no código
-[ ] arquivos SQL
-[ ] workflow backend JSON
-
-CONFIGURAÇÃO PAGES:
-Source: Deploy from a branch
-Branch: main
-Folder: / (root)
+CONFIRMAÇÃO:
+O site precisa mostrar "Salão Nayara · LIVE 2.1.2".
+Se mostrar "MODO DEMONSTRAÇÃO", o GitHub ainda está servindo a versão antiga.
