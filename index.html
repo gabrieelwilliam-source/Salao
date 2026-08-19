@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#241d2b" />
+  <title>Iana Gestão — Salão Nayara</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">I</div>
+        <div>
+          <div class="brand-name">Iana Gestão</div>
+          <div class="brand-sub">Salão Nayara</div>
+        </div>
+      </div>
+
+      <nav class="nav" id="nav">
+        <button class="nav-item active" data-page="dashboard"><span class="ico">⌂</span><span>Dashboard</span></button>
+        <button class="nav-item" data-page="conversas"><span class="ico">◫</span><span>Conversas</span><span class="badge">8</span></button>
+        <button class="nav-item" data-page="pendencias"><span class="ico">!</span><span>Precisa da Nayara</span><span class="badge danger">3</span></button>
+        <button class="nav-item" data-page="agenda"><span class="ico">□</span><span>Agenda</span></button>
+        <button class="nav-item" data-page="clientes"><span class="ico">◎</span><span>Clientes</span></button>
+        <button class="nav-item" data-page="financeiro"><span class="ico">R$</span><span>Financeiro</span></button>
+        <button class="nav-item" data-page="resumos"><span class="ico">✦</span><span>Resumos da Iana</span></button>
+        <button class="nav-item" data-page="iana"><span class="ico">●</span><span>Iana / Sistema</span></button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="status-row">
+          <span class="status-dot online"></span>
+          <div>
+            <strong>Iana online</strong>
+            <small>última atividade agora</small>
+          </div>
+        </div>
+        <div class="demo-note">MODO DEMONSTRAÇÃO</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-btn" id="menuBtn">☰</button>
+          <div>
+            <h1 id="pageTitle">Dashboard</h1>
+            <p id="pageSubtitle">Visão geral do salão e da operação da Iana.</p>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="search-wrap">
+            <span>⌕</span>
+            <input id="globalSearch" type="search" placeholder="Buscar cliente, serviço ou conversa..." />
+          </div>
+          <button class="icon-btn" title="Atualizar" id="refreshBtn">↻</button>
+          <div class="profile">
+            <div class="avatar">N</div>
+            <div class="profile-copy">
+              <strong>Nayara</strong>
+              <small>Administradora</small>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="content">
+        <!-- DASHBOARD -->
+        <div class="page active" id="page-dashboard">
+          <div class="hero-row">
+            <div>
+              <div class="eyebrow">HOJE · <span id="todayLabel"></span></div>
+              <h2>Boa tarde, Nayara.</h2>
+              <p>A Iana está acompanhando os atendimentos e organizando as informações para você.</p>
+            </div>
+            <div class="hero-actions">
+              <button class="btn secondary" data-goto="pendencias">Ver pendências</button>
+              <button class="btn primary" data-goto="agenda">Abrir agenda</button>
+            </div>
+          </div>
+
+          <div class="metrics-grid">
+            <article class="metric-card">
+              <div class="metric-icon purple">◫</div>
+              <div><span>Conversas hoje</span><strong>18</strong><small class="up">+12% vs. ontem</small></div>
+            </article>
+            <article class="metric-card">
+              <div class="metric-icon rose">!</div>
+              <div><span>Precisam da Nayara</span><strong>3</strong><small>2 agendamentos · 1 avaliação</small></div>
+            </article>
+            <article class="metric-card">
+              <div class="metric-icon green">✓</div>
+              <div><span>Atendimentos hoje</span><strong>7</strong><small>5 confirmados · 2 realizados</small></div>
+            </article>
+            <article class="metric-card">
+              <div class="metric-icon gold">R$</div>
+              <div><span>Recebido hoje</span><strong>R$ 1.450</strong><small class="up">6 pagamentos válidos</small></div>
+            </article>
+          </div>
+
+          <div class="dashboard-grid">
+            <article class="panel span-2">
+              <div class="panel-head">
+                <div>
+                  <h3>Precisa da Nayara</h3>
+                  <p>Somente o que exige decisão humana.</p>
+                </div>
+                <button class="link-btn" data-goto="pendencias">Ver tudo →</button>
+              </div>
+              <div id="urgentList" class="urgent-list"></div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Funil de hoje</h3>
+                  <p>Das conversas até o atendimento.</p>
+                </div>
+              </div>
+              <div class="funnel">
+                <div class="funnel-row"><span>Conversas</span><b>18</b></div>
+                <div class="bar"><i style="width:100%"></i></div>
+                <div class="funnel-row"><span>Interesse em serviço</span><b>11</b></div>
+                <div class="bar"><i style="width:61%"></i></div>
+                <div class="funnel-row"><span>Pedido de horário</span><b>6</b></div>
+                <div class="bar"><i style="width:33%"></i></div>
+                <div class="funnel-row"><span>Confirmados</span><b>5</b></div>
+                <div class="bar"><i style="width:28%"></i></div>
+              </div>
+            </article>
+
+            <article class="panel span-2">
+              <div class="panel-head">
+                <div>
+                  <h3>Agenda de hoje</h3>
+                  <p>Confirmados, solicitações e pendências.</p>
+                </div>
+                <button class="link-btn" data-goto="agenda">Agenda completa →</button>
+              </div>
+              <div id="todayAgenda" class="timeline"></div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Resumo da Iana</h3>
+                  <p>Leitura rápida da operação.</p>
+                </div>
+                <span class="ai-pill">✦ IA</span>
+              </div>
+              <div class="summary-card">
+                <p>Hoje, <strong>18 pessoas</strong> conversaram com o salão. <strong>6 demonstraram intenção de agendamento</strong> e 3 dependem de uma confirmação sua.</p>
+                <p>Mechas foi o serviço mais perguntado. Há <strong>2 clientes com orçamento sem retorno</strong> que podem entrar em follow-up.</p>
+              </div>
+              <button class="btn secondary full" data-goto="resumos">Ver análise completa</button>
+            </article>
+          </div>
+        </div>
+
+        <!-- CONVERSAS -->
+        <div class="page" id="page-conversas">
+          <div class="two-col-layout conversations-layout">
+            <section class="panel list-panel">
+              <div class="panel-head sticky-head">
+                <div><h3>Conversas</h3><p>Atendimento da Iana e da Nayara.</p></div>
+                <div class="filter-chips">
+                  <button class="chip active" data-conv-filter="all">Todas</button>
+                  <button class="chip" data-conv-filter="iana">Iana</button>
+                  <button class="chip" data-conv-filter="nayara">Nayara</button>
+                </div>
+              </div>
+              <div id="conversationList" class="conversation-list"></div>
+            </section>
+            <section class="panel conversation-detail" id="conversationDetail"></section>
+          </div>
+        </div>
+
+        <!-- PENDÊNCIAS -->
+        <div class="page" id="page-pendencias">
+          <div class="section-intro">
+            <div>
+              <h2>Precisa da Nayara</h2>
+              <p>A Iana continua atendendo o que pode e separa aqui somente decisões que exigem você.</p>
+            </div>
+            <div class="segmented">
+              <button class="active">Abertas <b>3</b></button>
+              <button>Resolvidas</button>
+            </div>
+          </div>
+          <div id="pendingCards" class="pending-grid"></div>
+        </div>
+
+        <!-- AGENDA -->
+        <div class="page" id="page-agenda">
+          <div class="section-intro">
+            <div>
+              <h2>Agenda</h2>
+              <p>Solicitações, confirmações, atendimentos e faltas em uma única visão.</p>
+            </div>
+            <div class="agenda-actions">
+              <button class="btn secondary">Hoje</button>
+              <button class="btn primary" id="newAppointmentBtn">+ Novo registro</button>
+            </div>
+          </div>
+          <div class="agenda-stats">
+            <div><strong>7</strong><span>Hoje</span></div>
+            <div><strong>5</strong><span>Confirmados</span></div>
+            <div><strong>2</strong><span>Solicitações</span></div>
+            <div><strong>1</strong><span>Aguardando Nayara</span></div>
+          </div>
+          <div id="agendaBoard" class="agenda-board"></div>
+        </div>
+
+        <!-- CLIENTES -->
+        <div class="page" id="page-clientes">
+          <div class="section-intro">
+            <div><h2>Clientes</h2><p>Histórico, preferências, serviços, pagamentos e relacionamento.</p></div>
+            <div class="search-inline"><span>⌕</span><input id="clientSearch" placeholder="Buscar cliente..." /></div>
+          </div>
+          <div class="panel table-panel">
+            <div class="client-kpis">
+              <div><span>Total</span><strong>284</strong></div>
+              <div><span>Ativos 90 dias</span><strong>119</strong></div>
+              <div><span>Recorrentes</span><strong>76</strong></div>
+              <div><span>Para reativar</span><strong>14</strong></div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Cliente</th><th>Último serviço</th><th>Última visita</th><th>Total pago</th><th>Relacionamento</th><th></th></tr></thead>
+                <tbody id="clientTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- FINANCEIRO -->
+        <div class="page" id="page-financeiro">
+          <div class="section-intro">
+            <div><h2>Financeiro</h2><p>Valores informados, cobrados e realmente recebidos.</p></div>
+            <div class="period-select"><button class="chip active">Hoje</button><button class="chip">Semana</button><button class="chip">Mês</button></div>
+          </div>
+          <div class="metrics-grid finance-metrics">
+            <article class="metric-card"><div class="metric-icon gold">R$</div><div><span>Recebido</span><strong>R$ 1.450</strong><small>6 pagamentos</small></div></article>
+            <article class="metric-card"><div class="metric-icon purple">↗</div><div><span>Cobrado</span><strong>R$ 1.730</strong><small>8 cobranças</small></div></article>
+            <article class="metric-card"><div class="metric-icon rose">…</div><div><span>A receber</span><strong>R$ 280</strong><small>2 clientes</small></div></article>
+            <article class="metric-card"><div class="metric-icon green">◎</div><div><span>Orçamentos</span><strong>R$ 2.550</strong><small>5 enviados</small></div></article>
+          </div>
+          <div class="dashboard-grid">
+            <article class="panel span-2">
+              <div class="panel-head"><div><h3>Movimentações</h3><p>Somente valores com origem registrada.</p></div><button class="btn secondary small">Exportar</button></div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Cliente</th><th>Serviço</th><th>Tipo</th><th>Valor</th><th>Forma</th><th>Origem</th></tr></thead>
+                  <tbody id="financeTable"></tbody>
+                </table>
+              </div>
+            </article>
+            <article class="panel">
+              <div class="panel-head"><div><h3>Recebido por forma</h3><p>Distribuição de hoje.</p></div></div>
+              <div class="donut-wrap">
+                <div class="donut"><div class="donut-center"><strong>R$ 1.450</strong><span>total</span></div></div>
+                <div class="legend">
+                  <div><i class="dot d1"></i><span>Pix</span><strong>R$ 970</strong></div>
+                  <div><i class="dot d2"></i><span>Cartão</span><strong>R$ 400</strong></div>
+                  <div><i class="dot d3"></i><span>Dinheiro</span><strong>R$ 80</strong></div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <!-- RESUMOS -->
+        <div class="page" id="page-resumos">
+          <div class="section-intro">
+            <div><h2>Resumos da Iana</h2><p>A Iana transforma o movimento do salão em decisões práticas.</p></div>
+            <button class="btn primary">Gerar resumo agora</button>
+          </div>
+          <div class="insights-grid">
+            <article class="insight hero-insight">
+              <div class="ai-pill">✦ Resumo de hoje</div>
+              <h3>O salão teve um dia movimentado, com interesse forte em mechas.</h3>
+              <p>18 conversas foram registradas. 6 pessoas demonstraram intenção de agendar e 3 dependem de ação da Nayara. Foram recebidos R$ 1.450 em pagamentos válidos.</p>
+              <div class="insight-tags"><span>18 conversas</span><span>6 oportunidades</span><span>R$ 1.450 recebido</span></div>
+            </article>
+            <article class="insight"><div class="insight-icon">↗</div><h3>Oportunidades</h3><p><strong>Ana</strong> recebeu orçamento de R$ 450 para mechas e ainda não respondeu.</p><p><strong>Fernanda</strong> demonstrou interesse em tratamento e parou antes de escolher dia.</p></article>
+            <article class="insight"><div class="insight-icon">!</div><h3>Atenção</h3><p><strong>Carla</strong> relatou insatisfação com o resultado e está aguardando retorno humano.</p><p><strong>Bruna</strong> já teve 2 faltas nos últimos 90 dias.</p></article>
+            <article class="insight"><div class="insight-icon">◎</div><h3>Relacionamento</h3><p>14 clientes estão acima do intervalo normal de retorno e podem entrar em reativação quando a automação estiver habilitada.</p></article>
+          </div>
+        </div>
+
+        <!-- IANA / SISTEMA -->
+        <div class="page" id="page-iana">
+          <div class="section-intro">
+            <div><h2>Iana / Sistema</h2><p>Saúde do agente, automações e controles operacionais.</p></div>
+            <div class="live-pill"><span class="status-dot online"></span> Sistema operacional</div>
+          </div>
+          <div class="system-grid">
+            <article class="panel">
+              <div class="panel-head"><div><h3>Status da Iana</h3><p>Últimas 24 horas.</p></div></div>
+              <div class="health-list">
+                <div><span>Atendimento automático</span><b class="good">Online</b></div>
+                <div><span>Observador de conversas</span><b class="good">Online</b></div>
+                <div><span>Banco PostgreSQL</span><b class="good">Conectado</b></div>
+                <div><span>WhatsApp / Evolution</span><b class="good">Conectado</b></div>
+                <div><span>Erros de workflow</span><b>0</b></div>
+                <div><span>Tempo médio de resposta</span><b>8,2s</b></div>
+              </div>
+            </article>
+            <article class="panel">
+              <div class="panel-head"><div><h3>Automações</h3><p>Controles prontos para conectar ao banco.</p></div></div>
+              <div class="toggle-list" id="toggleList">
+                <label><span><strong>Atendimento automático</strong><small>Iana responde clientes dentro das regras.</small></span><input type="checkbox" checked data-setting="auto_service"><i></i></label>
+                <label><span><strong>Observador</strong><small>Continua aprendendo quando Nayara assume.</small></span><input type="checkbox" checked data-setting="observer"><i></i></label>
+                <label><span><strong>Follow-up automático</strong><small>Retoma oportunidades sem resposta.</small></span><input type="checkbox" data-setting="followup"><i></i></label>
+                <label><span><strong>Pós-atendimento</strong><small>Solicita feedback após atendimento.</small></span><input type="checkbox" data-setting="post_service"><i></i></label>
+                <label><span><strong>Reativação</strong><small>Contata clientes fora do ciclo normal.</small></span><input type="checkbox" data-setting="reactivation"><i></i></label>
+              </div>
+            </article>
+            <article class="panel span-2">
+              <div class="panel-head"><div><h3>Auditoria e segurança</h3><p>Proteções ativas no atendimento.</p></div><span class="secure-pill">Guard V51.9.1</span></div>
+              <div class="security-grid">
+                <div><span>✓</span><p><strong>Agenda protegida</strong> Iana não confirma vaga nem inventa disponibilidade.</p></div>
+                <div><span>✓</span><p><strong>Preço protegido</strong> Valor só sai de fonte autorizada.</p></div>
+                <div><span>✓</span><p><strong>Serviço protegido</strong> Agendamento exige serviço do catálogo ativo.</p></div>
+                <div><span>✓</span><p><strong>Auditoria financeira</strong> Orçamento, cobrança e pagamento são separados.</p></div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <div class="toast" id="toast"></div>
+
+  <div class="modal-backdrop" id="appointmentModal">
+    <div class="modal">
+      <div class="modal-head"><div><h3>Novo registro de agenda</h3><p>Registro manual. Não confirma disponibilidade automaticamente.</p></div><button class="close-modal">×</button></div>
+      <form id="appointmentForm">
+        <div class="form-grid">
+          <label>Cliente<input required placeholder="Nome da cliente" /></label>
+          <label>Serviço<select required><option>Mechas</option><option>Corte</option><option>Tratamento capilar</option><option>Coloração</option><option>Alinhamento</option></select></label>
+          <label>Data<input type="date" required /></label>
+          <label>Horário<input type="time" required /></label>
+        </div>
+        <label>Status<select><option>Solicitação</option><option>Aguardando Nayara</option><option>Confirmado</option></select></label>
+        <div class="modal-actions"><button type="button" class="btn secondary close-modal">Cancelar</button><button class="btn primary">Salvar registro</button></div>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
