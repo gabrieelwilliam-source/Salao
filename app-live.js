@@ -97,19 +97,3 @@ $('todayLabel').textContent=new Intl.DateTimeFormat('pt-BR',{weekday:'long',day:
 updateConnectionUi();
 boot();
 })();
-
-/* IANA_V52_2_HELPERS
-   Preparação para fila inteligente:
-   - prioridade
-   - categoria
-   - resumo
-   - ação necessária
-*/
-function ianaPriorityLabel(value){
- const map={high:'alta',normal:'normal',low:'baixa'};
- return map[value]||value||'normal';
-}
-function ianaIgnoreNoise(text){
- const t=String(text||'').toLowerCase();
- return /banco|boleto|crédito|credito|automático|automatico|sua solicitação foi/.test(t);
-}

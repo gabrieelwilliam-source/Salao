@@ -1,0 +1,16 @@
+IANA V52.3.1 - SITE COMPLETO
+
+ESTE ZIP CONTÉM O SITE, não apenas SQL/notas.
+
+Para GitHub:
+- envie os arquivos/pastas do pacote para a raiz do repositório;
+- mantenha a configuração atual do GitHub Pages;
+- o site deve mostrar LIVE 2.1.5 / IANA V52.3.1.
+
+IMPORTANTE:
+A interface já ganha Resolver/Ignorar.
+O SQL está em backend-v52.3.1/V52.3.1_ACTIONS.sql.
+
+Para persistir Resolver/Ignorar no banco através do site, o webhook n8n precisa aceitar
+as ações resolve_handoff e ignore_handoff. Até isso ser ligado, o frontend remove o item
+localmente no navegador para permitir testar a experiência sem quebrar a API atual.
