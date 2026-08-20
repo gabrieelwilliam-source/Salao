@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#241d2b">
-<title>Iana Gestão Live 2.4.0</title>
-<link rel="manifest" href="manifest.json?v=213"><link rel="stylesheet" href="styles-2.4.0.css?v=213">
+<title>Iana Gestão Live 2.4.1</title>
+<link rel="manifest" href="manifest.json?v=5241"><link rel="stylesheet" href="styles-v52.4.1.css?v=5241">
 
 <script>
 (function(){
-  window.IANA_CACHE_KILLER='2.4.0';
+  window.IANA_CACHE_KILLER='2.4.1';
   try {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(function(regs){
@@ -43,7 +43,7 @@
 
 <div id="app" class="hidden">
 <aside class="sidebar" id="sidebar">
-  <div class="brand"><div class="brand-mark">I</div><div><div class="brand-name">Iana Gestão</div><div class="brand-sub">Salão Nayara · LIVE 2.4.0</div></div></div>
+  <div class="brand"><div class="brand-mark">I</div><div><div class="brand-name">Iana Gestão</div><div class="brand-sub">Salão Nayara · LIVE 2.4.1</div></div></div>
   <nav class="nav">
     <button class="nav-item active" data-page="dashboard"><span class="ico">⌂</span><span>Dashboard</span></button>
     <button class="nav-item" data-page="conversas"><span class="ico">◫</span><span>Conversas</span></button>
@@ -81,7 +81,7 @@
 
   <div class="page" id="page-conversas"><div class="two-col-layout conversations-layout"><section class="panel list-panel"><div class="panel-head sticky-head"><div><h3>Conversas</h3><p id="conversationCount">—</p></div><div class="search-inline"><span>⌕</span><input id="conversationSearch" placeholder="Buscar..."></div></div><div id="conversationList" class="conversation-list loading-block">Carregando…</div></section><section class="panel conversation-detail" id="conversationDetail"><div class="empty-state">Selecione uma conversa.</div></section></div></div>
 
-  <div class="page" id="page-pendencias"><div class="section-intro"><div><h2>Precisa da Nayara</h2><p>Fila em tempo real dos handoffs que exigem decisão humana.</p></div><span class="live-pill"><span class="status-dot online"></span> atualização automática</span></div><div id="pendingCards" class="pending-grid loading-block">Carregando…</div></div>
+  <div class="page" id="page-pendencias"><div class="section-intro"><div><h2>Precisa da Nayara</h2><p>Fila em tempo real somente do que exige decisão humana.</p></div><span class="live-pill"><span class="status-dot online"></span> atualização automática</span></div><div class="pending-toolbar"><div class="filter-chips"><button class="chip active" data-pending-filter="all">Todas</button><button class="chip" data-pending-filter="agendamento">Agendamento</button><button class="chip" data-pending-filter="reclamacao">Reclamações</button><button class="chip" data-pending-filter="noise">Provável ruído</button></div><small id="pendingFilterCount"></small></div><div id="pendingCards" class="pending-grid loading-block">Carregando…</div></div>
 
   <div class="page" id="page-agenda"><div class="section-intro"><div><h2>Agenda</h2><p>Agendamentos confirmados e solicitações ainda pendentes.</p></div><button class="btn secondary" id="agendaTodayBtn">Semana atual</button></div><div id="agendaBoard" class="agenda-live-grid loading-block">Carregando…</div><h3 class="subsection-title">Solicitações aguardando Nayara</h3><div id="agendaRequests" class="pending-grid"></div></div>
 
@@ -112,15 +112,8 @@
 </main>
 </div>
 <div class="drawer-overlay" id="drawerOverlay"></div><div class="toast" id="toast"></div>
-<script src="app-live-2.4.0.js?v=213"></script>
-<div id="buildRibbon" style="position:fixed;right:10px;bottom:10px;z-index:99999;background:#241d2b;color:white;padding:6px 10px;border-radius:9px;font:700 10px/1.2 Arial,sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.2)">LIVE 2.4.0</div>
+<script src="app-v52.4.1.js?v=5241"></script>
+<div id="buildRibbon" style="position:fixed;right:10px;bottom:10px;z-index:99999;background:#241d2b;color:white;padding:6px 10px;border-radius:9px;font:700 10px/1.2 Arial,sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.2)">LIVE 2.4.1</div>
 
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function(){
-    navigator.serviceWorker.register('./service-worker.js?v=213', {scope:'./'}).catch(function(){});
-  });
-}
-</script>
 
 </body></html>
