@@ -97,3 +97,32 @@ $('todayLabel').textContent=new Intl.DateTimeFormat('pt-BR',{weekday:'long',day:
 updateConnectionUi();
 boot();
 })();
+/* IANA V52.3.2 - buttons directly on visible "Ver conversa" cards */
+(function(){
+ if(window.__IANA5232)return; window.__IANA5232=true;
+ function enhance(){
+   document.querySelectorAll("button,a").forEach(function(btn){
+     if(!/ver conversa/i.test(btn.textContent||"") || btn.dataset.ianaAction) return;
+     btn.dataset.ianaAction="1";
+     var card=btn.closest(".card")||btn.parentElement;
+     if(!card)return;
+     var wrap=document.createElement("div"); wrap.className="iana-v5232-actions";
+     var ok=document.createElement("button"); ok.className="iana-v5232-btn iana-v5232-resolve"; ok.textContent="✓ Resolver";
+     var no=document.createElement("button"); no.className="iana-v5232-btn"; no.textContent="Ignorar";
+     ok.onclick=function(){
+       card.style.opacity="0"; card.style.transition="opacity .2s";
+       setTimeout(function(){card.style.display="none"},220);
+       try{var s=JSON.parse(localStorage.getItem("iana_v5232_actions")||"{}");s[(card.innerText||"").slice(0,200)]={status:"resolved",at:new Date().toISOString()};localStorage.setItem("iana_v5232_actions",JSON.stringify(s))}catch(e){}
+     };
+     no.onclick=function(){
+       var r=prompt("Motivo para ignorar:","sem necessidade"); if(r===null)return;
+       card.style.opacity="0"; card.style.transition="opacity .2s";
+       setTimeout(function(){card.style.display="none"},220);
+       try{var s=JSON.parse(localStorage.getItem("iana_v5232_actions")||"{}");s[(card.innerText||"").slice(0,200)]={status:"ignored",reason:r,at:new Date().toISOString()};localStorage.setItem("iana_v5232_actions",JSON.stringify(s))}catch(e){}
+     };
+     wrap.append(ok,no); btn.insertAdjacentElement("afterend",wrap);
+   });
+ }
+ window.addEventListener("load",enhance);
+ new MutationObserver(enhance).observe(document.body,{subtree:true,childList:true});
+})();

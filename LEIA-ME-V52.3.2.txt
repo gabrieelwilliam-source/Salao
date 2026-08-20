@@ -1,0 +1,10 @@
+V52.3.2 - CORREÇÃO VISUAL DA FILA
+
+Base: site atual Salao-main.
+
+Correção:
+- Os botões são inseridos diretamente depois de qualquer botão/link "Ver conversa".
+- ✓ Resolver remove a pendência da tela e registra a ação localmente para teste.
+- Ignorar pede o motivo e remove a pendência da tela.
+
+A persistência definitiva no PostgreSQL/n8n será ligada na etapa seguinte.

@@ -71,9 +71,6 @@ button,input,select{font:inherit} button{cursor:pointer}
 .connection-actions{display:flex;gap:9px;margin-top:14px}
 @media(max-width:700px){.connection-info-grid{grid-template-columns:1fr}.connection-actions{flex-direction:column}}
 
-/* IANA V52.3.1 */
-.iana-queue-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:12px;padding-top:10px;border-top:1px solid rgba(90,65,100,.10)}
-.iana-btn{border:1px solid #ddd0e1;background:#fff;color:#5f4968;border-radius:9px;padding:7px 11px;font-size:10px;font-weight:700;cursor:pointer}
-.iana-btn:hover{background:#f8f3f9}
-.iana-resolve{background:#f1e9f3}
-.iana-ignore{color:#7b687f}
+.iana-v5232-actions{display:flex!important;gap:8px!important;margin-top:8px!important;width:100%!important}
+.iana-v5232-btn{flex:1!important;border:1px solid #e2d8e5!important;background:#fff!important;color:#5d4967!important;border-radius:10px!important;padding:9px 12px!important;font-size:12px!important;font-weight:700!important;cursor:pointer!important}
+.iana-v5232-resolve{background:#f1e9f3!important}

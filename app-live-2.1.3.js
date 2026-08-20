@@ -1,4 +1,4 @@
-window.IANA_WEB_BUILD='2.1.5-cache-killer';
+window.IANA_WEB_BUILD='2.1.3-cache-killer';
 (() => {
 const LS_URL='iana_n8n_api_url',LS_KEY='iana_n8n_access_key';
 let currentPage='dashboard',currentContact=null,financeScope='today';
@@ -97,71 +97,3 @@ $('todayLabel').textContent=new Intl.DateTimeFormat('pt-BR',{weekday:'long',day:
 updateConnectionUi();
 boot();
 })();
-
-/* ===== IANA V52.3.1 FILA OPERACIONAL ===== */
-window.IANA_QUEUE_VERSION='52.3.1';
-
-function ianaQueueStore(){
-  try{return JSON.parse(localStorage.getItem('iana_queue_actions_v5231')||'{}')}catch(e){return {}}
-}
-function ianaQueueSave(v){localStorage.setItem('iana_queue_actions_v5231',JSON.stringify(v))}
-function ianaQueueKey(card){
-  return card?.dataset?.leadId || card?.dataset?.contactKey ||
-    (card?.innerText||'').trim().slice(0,120);
-}
-function ianaQueueApplyLocalState(){
-  const st=ianaQueueStore();
-  document.querySelectorAll('[data-iana-queue-card="1"]').forEach(card=>{
-    const v=st[ianaQueueKey(card)];
-    if(v && (v.status==='resolved'||v.status==='ignored')) card.style.display='none';
-  });
-}
-async function ianaQueueApi(action, params){
-  if(typeof api!=='function') return {ok:false,unsupported:true};
-  try{return await api(action,params)}catch(e){return {ok:false,error:String(e?.message||e)}}
-}
-function ianaQueueResolve(card){
-  const key=ianaQueueKey(card), st=ianaQueueStore();
-  st[key]={status:'resolved',at:new Date().toISOString()};ianaQueueSave(st);
-  card.style.display='none';
-  const id=card.dataset.leadId;
-  if(id) ianaQueueApi('resolve_handoff',{p_lead_id:id}).catch(()=>{});
-  if(typeof toast==='function') toast('Pendência marcada como resolvida.');
-}
-function ianaQueueIgnore(card){
-  const reason=prompt('Motivo para ignorar:\n\nspam | automático | duplicado | sem necessidade','sem necessidade');
-  if(reason===null)return;
-  const key=ianaQueueKey(card),st=ianaQueueStore();
-  st[key]={status:'ignored',reason,at:new Date().toISOString()};ianaQueueSave(st);
-  card.style.display='none';
-  const id=card.dataset.leadId;
-  if(id) ianaQueueApi('ignore_handoff',{p_lead_id:id,p_reason:reason}).catch(()=>{});
-  if(typeof toast==='function') toast('Pendência removida da fila.');
-}
-function ianaQueueEnhance(){
-  const page=document.getElementById('page-handoffs') || document.querySelector('[data-page="handoffs"]')?.closest('.page');
-  if(!page)return;
-  const cards=[...page.querySelectorAll('.handoff-card,.pending-card,.queue-card,.list-card,.card')];
-  cards.forEach(card=>{
-    if(card.dataset.ianaQueueCard==='1')return;
-    const text=(card.innerText||'').trim();
-    if(!text || text.length<5)return;
-    // Don't transform top summary/stat cards.
-    if(/pendências atuais|alta prioridade|resolvidas hoje/i.test(text) && text.length<100)return;
-    card.dataset.ianaQueueCard='1';
-    const id=card.getAttribute('data-id')||card.getAttribute('data-lead-id')||'';
-    if(id)card.dataset.leadId=id;
-    const actions=document.createElement('div');
-    actions.className='iana-queue-actions';
-    actions.innerHTML='<button class="iana-btn iana-resolve">✓ Resolver</button><button class="iana-btn iana-ignore">Ignorar</button>';
-    actions.querySelector('.iana-resolve').onclick=()=>ianaQueueResolve(card);
-    actions.querySelector('.iana-ignore').onclick=()=>ianaQueueIgnore(card);
-    card.appendChild(actions);
-  });
-  ianaQueueApplyLocalState();
-}
-const __ianaQueueObserver=new MutationObserver(()=>ianaQueueEnhance());
-window.addEventListener('load',()=>{
-  ianaQueueEnhance();
-  __ianaQueueObserver.observe(document.body,{subtree:true,childList:true});
-});
