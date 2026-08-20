@@ -74,3 +74,6 @@ button,input,select{font:inherit} button{cursor:pointer}
 .iana-v5232-actions{display:flex!important;gap:8px!important;margin-top:8px!important;width:100%!important}
 .iana-v5232-btn{flex:1!important;border:1px solid #e2d8e5!important;background:#fff!important;color:#5d4967!important;border-radius:10px!important;padding:9px 12px!important;font-size:12px!important;font-weight:700!important;cursor:pointer!important}
 .iana-v5232-resolve{background:#f1e9f3!important}
+
+.iana-v5233-actions{display:flex;gap:8px;margin-top:8px;width:100%}
+.iana-v5233-btn{flex:1;padding:9px;border-radius:10px;border:1px solid #ddd;background:#fff;cursor:pointer;font-weight:700}

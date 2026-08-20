@@ -1,0 +1,7 @@
+IANA V52.3.3
+
+Melhorias:
+- Botões Resolver/Ignorar corrigidos usando a estrutura real dos cards.
+- Filtro inicial de mensagens fora do contexto do salão.
+- Remoção visual da pendência.
+- Preparado para próxima etapa: persistência via Supabase/n8n.
