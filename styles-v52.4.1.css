@@ -1,10 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
 
 :root{
-  --bg:#f7f5f7;--panel:#fff;--panel-2:#fbfafb;--text:#241d2b;--muted:#7d7482;
-  --border:#e9e4ea;--accent:#6f4d76;--accent-2:#9b6e91;--accent-soft:#f1eaf2;
-  --rose:#b75c73;--rose-soft:#f9e9ee;--gold:#aa7a32;--gold-soft:#fbf2e4;
-  --green:#397964;--green-soft:#e7f3ef;--shadow:0 8px 28px rgba(44,29,50,.07);
+  --bg:#faf7f5;--panel:#ffffff;--panel-2:#fcf9f7;--text:#2b2028;--muted:#81747c;
+  --border:#e9e4ea;--accent:#7b5a7f;--accent-2:#b08aa8;--accent-soft:#f4edf5;
+  --rose:#b75c73;--rose-soft:#f9e9ee;--gold:#c09a5a;--gold-soft:#fbf5e9;
+  --green:#397964;--green-soft:#e7f3ef;--shadow:0 8px 28px rgba(85,55,70,.08);
   --radius:18px;
 }
 *{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif}
@@ -73,3 +73,17 @@ button,input,select{font:inherit} button{cursor:pointer}
 
 /* V52.4.1 - Fila operacional */
 .pending-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:-8px 0 15px}.pending-toolbar small{color:var(--muted);font-size:10px}.pending-badges{display:flex;gap:6px;flex-wrap:wrap}.category-pill,.noise-pill{font-size:9px;padding:5px 8px;border-radius:20px;background:var(--accent-soft);color:var(--accent);font-weight:600}.noise-pill{background:#fff0e8;color:#9b5b31}.pending-noise{border-style:dashed}.pending-client{display:flex;align-items:center;gap:10px;margin:12px 0}.pending-client .avatar{width:36px;height:36px;font-size:10px}.pending-client h3{margin:0;font-size:14px}.pending-client p{margin:3px 0 0;color:var(--muted);font-size:9px}.pending-summary-box,.pending-action-box{background:var(--panel-2);border:1px solid var(--border);border-radius:11px;padding:10px 11px;margin:9px 0}.pending-summary-box span,.pending-action-box span{display:block;color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}.pending-summary-box p{margin:0;color:var(--text);font-size:10px;line-height:1.45}.pending-action-box strong{font-size:10px;color:var(--accent)}.pending-actions-v5241{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:7px}.pending-actions-v5241 .btn{width:100%;padding:9px 10px}.resolve-action{background:var(--accent);color:#fff;border:1px solid var(--accent)}.resolve-action:hover{background:#5f4166}.ignore-action{background:#fff;color:#7d5d63;border:1px solid #eadcdf}.resolve-action:disabled,.ignore-action:disabled{opacity:.55;cursor:wait}@media(max-width:650px){.pending-toolbar{align-items:flex-start;flex-direction:column}.pending-actions-v5241{grid-template-columns:1fr}.filter-chips{overflow:auto;max-width:100%}}
+
+/* IANA_NAYARA_THEME_V1 */
+.sidebar{
+  background:linear-gradient(180deg,#2b2028,#3b2b3c);
+}
+.card,.panel,.metric{
+  border-radius:22px;
+}
+.section-title{
+  letter-spacing:-.02em;
+}
+.btn.primary{
+  box-shadow:0 10px 25px rgba(123,90,127,.22);
+}
