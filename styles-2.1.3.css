@@ -70,3 +70,8 @@ button,input,select{font:inherit} button{cursor:pointer}
 .connection-info-grid strong{display:block;font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .connection-actions{display:flex;gap:9px;margin-top:14px}
 @media(max-width:700px){.connection-info-grid{grid-template-columns:1fr}.connection-actions{flex-direction:column}}
+
+.btn.resolve,.btn.ignore{margin-left:8px}
+.btn.resolve{background:#f0e7f3;color:#5b4166}
+.btn.ignore{background:#fff7ed;color:#8a5a00}
+.pending-summary{line-height:1.45}
