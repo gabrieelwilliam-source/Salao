@@ -1,0 +1,6 @@
+IANA NAYARA THEME V2
+
+Correção:
+- Ajustado o CSS realmente carregado pelo index.html.
+- Aplicado na variável correta styles-v52.4.1.css.
+- Mantida toda lógica n8n/Supabase.
