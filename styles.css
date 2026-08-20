@@ -70,3 +70,7 @@ button,input,select{font:inherit} button{cursor:pointer}
 .connection-info-grid strong{display:block;font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .connection-actions{display:flex;gap:9px;margin-top:14px}
 @media(max-width:700px){.connection-info-grid{grid-template-columns:1fr}.connection-actions{flex-direction:column}}
+
+.iana-priority{display:inline-flex;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:600}
+.iana-summary{padding:10px;border-radius:12px;background:#faf7fb;margin:10px 0}
+.iana-action{font-size:12px;color:#72547d}
