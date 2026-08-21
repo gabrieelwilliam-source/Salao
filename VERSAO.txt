@@ -1,0 +1,13 @@
+IANA NAYARA PREMIUM V4
+
+Alterações:
+- redesign visual mais forte;
+- cards premium;
+- sidebar premium;
+- aparência de plataforma própria do salão.
+
+Mantido:
+- n8n;
+- Supabase;
+- APIs;
+- lógica do painel.

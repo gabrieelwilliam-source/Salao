@@ -72,48 +72,64 @@ button,input,select{font:inherit} button{cursor:pointer}
 @media(max-width:700px){.connection-info-grid{grid-template-columns:1fr}.connection-actions{flex-direction:column}}
 
 
-/* IANA NAYARA PREMIUM V3 */
-:root{
- --n-primary:#7b5a7f;
- --n-secondary:#b18ba7;
- --n-bg:#faf7f3;
- --n-gold:#c6a15b;
+/* ================================
+ IANA NAYARA PREMIUM V4
+ Interface executiva do salão
+================================ */
+
+body {
+  background: #faf7f3 !important;
 }
 
-body{
- background:var(--n-bg);
+header, .topbar, .app-header {
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(10px);
 }
 
-.sidebar{
- background:linear-gradient(180deg,#2d2230 0%,#765477 100%) !important;
+.card, .panel, .metric, .box, [class*="card"] {
+  border-radius: 24px !important;
+  border: 1px solid rgba(123,90,127,.12) !important;
+  box-shadow: 0 18px 45px rgba(74,45,67,.10) !important;
 }
 
-.card,.panel,.box,.metric-card{
- border-radius:22px !important;
- box-shadow:0 14px 35px rgba(85,55,70,.10);
- border:1px solid rgba(123,90,127,.10);
+.sidebar {
+  background: linear-gradient(180deg,#2b202d 0%,#765477 100%) !important;
 }
 
-button,.btn{
- border-radius:14px !important;
+button, .btn {
+  border-radius: 16px !important;
 }
 
-.primary,.btn-primary{
- background:linear-gradient(135deg,#7b5a7f,#b18ba7) !important;
+h1, h2, h3 {
+  font-family: "Playfair Display", Georgia, serif;
 }
 
-h1,h2,h3{
- letter-spacing:-.03em;
+.dashboard-title::before {
+  content: "✨ ";
 }
 
-.premium-badge{
- background:#f5e9f4;
- color:#7b5a7f;
- border-radius:999px;
- padding:6px 12px;
+.metric {
+  transition: .25s ease;
 }
 
-/* visão de dona do salão */
-.metric-value{
- font-weight:700;
+.metric:hover, .card:hover {
+  transform: translateY(-3px);
 }
+
+.status-live {
+  border-radius: 999px;
+}
+
+/* destaques */
+.gold,
+.finance,
+.money {
+  color:#c29a58 !important;
+}
+
+/* visual de central */
+.action-card {
+  background:#fffaf7;
+  border-radius:24px;
+}
+
