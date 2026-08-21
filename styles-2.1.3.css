@@ -71,7 +71,49 @@ button,input,select{font:inherit} button{cursor:pointer}
 .connection-actions{display:flex;gap:9px;margin-top:14px}
 @media(max-width:700px){.connection-info-grid{grid-template-columns:1fr}.connection-actions{flex-direction:column}}
 
-.btn.resolve,.btn.ignore{margin-left:8px}
-.btn.resolve{background:#f0e7f3;color:#5b4166}
-.btn.ignore{background:#fff7ed;color:#8a5a00}
-.pending-summary{line-height:1.45}
+
+/* IANA NAYARA PREMIUM V3 */
+:root{
+ --n-primary:#7b5a7f;
+ --n-secondary:#b18ba7;
+ --n-bg:#faf7f3;
+ --n-gold:#c6a15b;
+}
+
+body{
+ background:var(--n-bg);
+}
+
+.sidebar{
+ background:linear-gradient(180deg,#2d2230 0%,#765477 100%) !important;
+}
+
+.card,.panel,.box,.metric-card{
+ border-radius:22px !important;
+ box-shadow:0 14px 35px rgba(85,55,70,.10);
+ border:1px solid rgba(123,90,127,.10);
+}
+
+button,.btn{
+ border-radius:14px !important;
+}
+
+.primary,.btn-primary{
+ background:linear-gradient(135deg,#7b5a7f,#b18ba7) !important;
+}
+
+h1,h2,h3{
+ letter-spacing:-.03em;
+}
+
+.premium-badge{
+ background:#f5e9f4;
+ color:#7b5a7f;
+ border-radius:999px;
+ padding:6px 12px;
+}
+
+/* visão de dona do salão */
+.metric-value{
+ font-weight:700;
+}

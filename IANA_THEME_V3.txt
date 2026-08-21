@@ -1,0 +1,11 @@
+IANA NAYARA PREMIUM V3
+
+Objetivo:
+Transformar o painel Iana em uma plataforma premium alinhada à marca Nayara.
+
+Alterações:
+- identidade visual nude/roxo;
+- cards premium;
+- sidebar refinada;
+- botões e estados;
+- sem alteração de n8n/Supabase.
