@@ -1,0 +1,12 @@
+IANA GESTÃO LIVE 2.1.4
+
+Correção:
+- restaurados os botões Resolver e Remover em “Precisa da Nayara”;
+- Resolver chama resolve_handoff;
+- Remover chama ignore_handoff e solicita um motivo;
+- após a ação o card sai da fila e o contador é atualizado;
+- preservadas as demais funções da LIVE 2.1.3, incluindo Inteligência;
+- tela de conexão atualizada para o endpoint iana-web-live-v242-api;
+- novo cache-buster v=214 para evitar carregar o JavaScript antigo.
+
+Backend esperado: IANA WEB LIVE V2.4.2 com capabilities resolve_handoff e ignore_handoff.

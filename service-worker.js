@@ -13,7 +13,7 @@ self.addEventListener('activate',event=>{
       for(const c of clients){
         try{
           const u=new URL(c.url);
-          u.searchParams.set('_iana_refresh','213');
+          u.searchParams.set('_iana_refresh','214');
           await c.navigate(u.toString());
         }catch(e){}
       }

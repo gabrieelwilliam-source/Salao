@@ -4,11 +4,11 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#241d2b">
 <title>Iana Gestão Premium - Salão Nayara</title>
-<link rel="manifest" href="manifest.json?v=213"><link rel="stylesheet" href="styles-2.1.3.css?v=213">
+<link rel="manifest" href="manifest.json?v=214"><link rel="stylesheet" href="styles-2.1.4.css?v=214">
 
 <script>
 (function(){
-  window.IANA_CACHE_KILLER='2.1.3';
+  window.IANA_CACHE_KILLER='2.1.4';
   try {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(function(regs){
@@ -28,11 +28,11 @@
 <body>
 <div id="setupScreen" class="gate-screen">
   <div class="gate-card">
-    <div class="gate-brand"><div class="brand-mark">I</div><div><h1>Iana Gestão</h1><p>Painel Live V2.1</p></div></div>
+    <div class="gate-brand"><div class="brand-mark">I</div><div><h1>Iana Gestão</h1><p>Painel Live V2.1.4</p></div></div>
     <div id="connectionStep">
       <h2>Conectar ao n8n</h2>
-      <p class="gate-help">Cole a Production URL do webhook <b>iana-web-live-v21-api</b> e a <b>access_key</b> retornada pelo instalador.</p>
-      <label>URL da API n8n<input id="apiUrl" placeholder="https://seu-n8n.com/webhook/iana-web-live-v21-api"></label>
+      <p class="gate-help">Cole a Production URL do webhook <b>iana-web-live-v242-api</b> e a <b>access_key</b> retornada pelo instalador.</p>
+      <label>URL da API n8n<input id="apiUrl" placeholder="https://seu-n8n.com/webhook/iana-web-live-v242-api"></label>
       <label>Access key<input id="apiKey" type="password" placeholder="chave gerada pelo workflow"></label>
       <button class="btn primary full" id="saveConnectionBtn">Testar e conectar</button>
       <small class="safe-note">O navegador não recebe usuário nem senha do PostgreSQL.</small>
@@ -43,7 +43,7 @@
 
 <div id="app" class="hidden">
 <aside class="sidebar" id="sidebar">
-  <div class="brand"><div class="brand-mark">I</div><div><div class="brand-name">Iana Gestão</div><div class="brand-sub">Salão Nayara · LIVE 2.1.3</div></div></div>
+  <div class="brand"><div class="brand-mark">I</div><div><div class="brand-name">Iana Gestão</div><div class="brand-sub">Salão Nayara · LIVE 2.1.4</div></div></div>
   <nav class="nav">
     <button class="nav-item active" data-page="dashboard"><span class="ico">⌂</span><span>Dashboard</span></button>
     <button class="nav-item" data-page="conversas"><span class="ico">◫</span><span>Conversas</span></button>
@@ -115,13 +115,13 @@
 </main>
 </div>
 <div class="drawer-overlay" id="drawerOverlay"></div><div class="toast" id="toast"></div>
-<script src="app-live-2.1.3.js?v=213"></script>
-<div id="buildRibbon" style="position:fixed;right:10px;bottom:10px;z-index:99999;background:#241d2b;color:white;padding:6px 10px;border-radius:9px;font:700 10px/1.2 Arial,sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.2)">LIVE 2.1.3</div>
+<script src="app-live-2.1.4.js?v=214"></script>
+<div id="buildRibbon" style="position:fixed;right:10px;bottom:10px;z-index:99999;background:#241d2b;color:white;padding:6px 10px;border-radius:9px;font:700 10px/1.2 Arial,sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.2)">LIVE 2.1.4</div>
 
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function(){
-    navigator.serviceWorker.register('./service-worker.js?v=213', {scope:'./'}).catch(function(){});
+    navigator.serviceWorker.register('./service-worker.js?v=214', {scope:'./'}).catch(function(){});
   });
 }
 </script>
