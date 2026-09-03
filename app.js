@@ -1,10 +1,10 @@
-/* Iana Gestão V53 — no third-party runtime or live credentials in this bundle. */
-window.IANA_WEB_BUILD='53.0';
+/* Iana Gestão V53.3 PWA — no third-party runtime or live credentials in this bundle. */
+window.IANA_WEB_BUILD='53.3-pwa1';
 (() => {
 'use strict';
 const $=id=>document.getElementById(id),TZ='America/Sao_Paulo';
 const LS_URL='iana_n8n_api_url',LS_KEY='iana_n8n_access_key';
-const state={page:'dashboard',contact:null,detail:null,finance:'today',week:0,offset:{conversations:0,pending:0,clients:0,finance:0},drafts:new Map(),seq:{},timer:null,syncBusy:false,cursor:0,lastFull:0,failures:0,connected:false,refresh:null,messageOffset:0};
+const state={page:'dashboard',contact:null,detail:null,finance:'today',week:0,offset:{conversations:0,pending:0,clients:0,finance:0},drafts:new Map(),seq:{},timer:null,syncBusy:false,cursor:0,lastFull:0,failures:0,connected:false,refresh:null,messageOffset:0,installPrompt:null};
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 const money=v=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Number(v||0)/100);
 const format=(v,opts)=>{const d=new Date(v);return !v||!Number.isFinite(d.getTime())?'—':new Intl.DateTimeFormat('pt-BR',{timeZone:TZ,...opts}).format(d)};
@@ -55,7 +55,7 @@ async function poll(){if(state.syncBusy||document.hidden){schedule();return;}sta
 }
 async function refresh(){if(state.refresh)return state.refresh;state.refresh=(async()=>{await Promise.all([loadDashboard(),loadPending(state.page==='pendencias')]);await loadCurrent();state.lastFull=Date.now();stamp();})().finally(()=>state.refresh=null);return state.refresh;}
 const titles={dashboard:['Hoje','O que precisa da sua atenção.'],conversas:['Conversas','Cliente, Iana e Nayara no mesmo histórico.'],pendencias:['Precisa de você','Decisões e próximos passos.'],agenda:['Agenda','Horários no fuso de Joinville.'],clientes:['Clientes','Histórico e preferências.'],financeiro:['Financeiro','Valores registrados por atendimento.'],resumos:['Resumos','Oportunidades para revisar.'],inteligencia:['Inteligência','Informações para decidir.'],iana:['Iana / Sistema','Conexão e funcionamento.']};
-async function goto(page){if(!titles[page])return;state.page=page;document.querySelectorAll('.page').forEach(e=>e.classList.toggle('active',e.id==='page-'+page));document.querySelectorAll('.nav-item').forEach(e=>e.classList.toggle('active',e.dataset.page===page));[$('pageTitle').textContent,$('pageSubtitle').textContent]=titles[page];$('sidebar').classList.remove('open');$('drawerOverlay').classList.remove('open');try{await loadCurrent();}catch(e){toast(humanError(e));status(false,'Falha ao atualizar');}schedule();}
+async function goto(page){if(!titles[page])return;state.page=page;if(page!=='conversas')document.body.classList.remove('mobile-chat-open');document.querySelectorAll('.page').forEach(e=>e.classList.toggle('active',e.id==='page-'+page));document.querySelectorAll('.nav-item').forEach(e=>e.classList.toggle('active',e.dataset.page===page));[$('pageTitle').textContent,$('pageSubtitle').textContent]=titles[page];$('sidebar').classList.remove('open');$('drawerOverlay').classList.remove('open');try{await loadCurrent();}catch(e){toast(humanError(e));status(false,'Falha ao atualizar');}schedule();}
 async function loadCurrent(){switch(state.page){case 'conversas':return loadConversations();case 'pendencias':return loadPending(true);case 'agenda':return loadAgenda();case 'clientes':return loadClients();case 'financeiro':return loadFinance();case 'resumos':case 'inteligencia':return loadInsights();case 'iana':return loadHealth();}}
 function pager(container,kind,total){const offset=state.offset[kind],end=Math.min(total,offset+50);$(container).innerHTML=`<span>${total?offset+1:0}–${end} de ${total}</span><button class="btn secondary" data-page-list="${kind}" data-delta="-50" ${offset===0?'disabled':''}>Anterior</button><button class="btn secondary" data-page-list="${kind}" data-delta="50" ${end>=total?'disabled':''}>Próxima</button>`;}
 function contactButton(k,text='Ver conversa',style='secondary'){return `<button class="btn ${style}" data-contact="${esc(k)}">${esc(text)}</button>`;}
@@ -73,7 +73,7 @@ async function loadConversations(){const seq=(state.seq.list||0)+1;state.seq.lis
  $('conversationCount').textContent=`${d.total||0} conversas`;$('conversationList').innerHTML=d.rows?.length?d.rows.map(c=>`<button class="conv-item ${c.contact_key===state.contact?'active':''}" data-contact="${esc(c.contact_key)}"><div class="avatar">${initials(c.customer_name)}</div><div class="conv-copy"><h4>${esc(c.customer_name)}</h4><p>${esc(c.author)}: ${esc(c.last_message)}</p></div><div class="conv-meta"><small>${ago(c.last_message_at)}</small><span class="author-tag ${esc(c.responsible)}">${c.responsible==='nayara'?'Nayara':c.responsible==='paused'?'Pausada':'Iana'}</span></div></button>`).join(''):empty('Nenhuma conversa encontrada.');pager('conversationPager','conversations',d.total||0);
  if(state.contact)await loadConversation(state.contact,true);else if(d.rows?.[0])await loadConversation(d.rows[0].contact_key);
 }
-async function openContact(key){if(state.contact!==key){state.detail=null;state.messageOffset=0;}state.contact=key;if(state.page!=='conversas')await goto('conversas');else await loadConversation(key);}
+async function openContact(key){if(state.contact!==key){state.detail=null;state.messageOffset=0;}state.contact=key;document.body.classList.add('mobile-chat-open');if(state.page!=='conversas')await goto('conversas');else await loadConversation(key);}
 function whatsapp(k){const phone=String(k||'').match(/^whatsapp:([0-9]{8,24})$/)?.[1];return phone?`https://wa.me/${phone}`:null;}
 function renderMessages(messages){return messages.map(m=>`<div class="message ${['client','iana','nayara'].includes(m.role)?m.role:'client'}"><div class="message-author">${esc(m.author)}</div><div class="message-body">${esc(String(m.content||'').replace(/^\*(?:Iana · Assistente virtual|Nayara)\*\s+/,''))}</div>${m.has_media?`<button class="btn secondary media-btn" data-action="media" data-message="${esc(m.id)}">${String(m.media_type).includes('audio')?'Ouvir áudio':'Abrir anexo'}</button>`:''}<div class="time">${dt(m.created_at)}</div></div>`).join('')||empty('Nenhuma mensagem armazenada.');}
 function deliveriesHtml(rows){return rows?.length?`<div class="delivery-warnings">${rows.map(o=>`<div><strong>${o.delivery_status==='pending'?'Envio em andamento':o.delivery_status==='failed'?'Envio recusado':'Conferir entrega no WhatsApp'}</strong><p>${esc(o.content)}</p>${o.review_allowed&&o.delivery_status!=='failed'?`<button class="btn secondary" data-action="review" data-target="${esc(o.target)}" data-message="${esc(o.id)}">Já conferi a entrega</button>`:''}</div>`).join('')}</div>`:'';}
@@ -84,6 +84,7 @@ async function loadConversation(key,quiet=false){
  const p=d.profile||{},name=p.customer_name||p.contact_id||key,control=d.control||{},link=whatsapp(key);state.detail=d;
  if(!same){
  $('conversationDetail').dataset.contact=key;$('conversationDetail').innerHTML=`<div class="conv-detail-head"><div class="conv-person"><div class="avatar">${initials(name)}</div><div><h3>${esc(name)}</h3><p>${esc(p.whatsapp_phone||p.contact_id||key)}</p></div></div><span id="chatOwner" class="author-tag"></span></div><div class="conversation-tools"><button class="btn primary" data-action="takeover">Assumir conversa</button><button class="btn secondary" data-action="release">Devolver à Iana</button>${link?`<a href="${link}" target="_blank" rel="noopener noreferrer" class="btn secondary">Abrir WhatsApp</a>`:''}<button class="btn secondary" data-action="appointment">Agenda</button><button class="btn secondary" data-action="financial">Registrar valor</button></div><p id="controlHint" class="hint"></p><div id="chatPending"></div><div id="clientSnapshot" class="client-summary-strip"></div><div id="deliveryWarnings"></div><button class="btn secondary" id="olderMessages" data-action="older">Carregar mensagens anteriores</button><button class="btn secondary" id="newerMessages" data-action="newer">Mensagens mais recentes</button><div id="chatMessages" class="chat" aria-live="polite"></div>${link?`<form id="composeForm" class="compose"><label for="messageDraft">Responder como Nayara</label><textarea id="messageDraft" rows="3" maxlength="3500" placeholder="Escreva sua mensagem…"></textarea><div class="compose-footer"><small>A assinatura Nayara será incluída. O envio assume a conversa por 2 horas.</small><button class="btn primary" type="submit" id="sendMessageBtn">Enviar</button></div><p id="sendStatus" role="status"></p></form>`:''}<details class="client-facts"><summary>Ficha da cliente e histórico</summary><div id="clientFacts"></div><button class="btn secondary" data-action="note">Editar observações</button><div id="actionHistory"></div></details>`;
+ const mobileBack=document.createElement('button');mobileBack.type='button';mobileBack.className='mobile-back-btn';mobileBack.dataset.mobileBack='';mobileBack.setAttribute('aria-label','Voltar para a lista de conversas');mobileBack.textContent='← Conversas';$('conversationDetail').prepend(mobileBack);
  if(link){$('messageDraft').value=state.drafts.get(key)||'';$('messageDraft').oninput=e=>state.drafts.set(key,e.target.value);$('composeForm').onsubmit=e=>{e.preventDefault();sendMessage(key);};}
  }
  $('chatOwner').textContent=control.responsible==='nayara'?'Nayara atendendo':control.responsible==='paused'?'Iana pausada':'Iana atendendo';$('chatOwner').className='author-tag '+(control.responsible||'iana');
@@ -153,6 +154,7 @@ async function loadInsights(){const d=await api('insights'),tot=d.totals||{};$('
  const html=groups.map(([title,rows,desc])=>`<article class="insight"><h3>${title}</h3>${rows?.length?rows.slice(0,8).map(x=>`<div class="opportunity"><strong>${esc(x.customer_name)}</strong><p>${esc(desc(x))}</p>${contactButton(x.contact_key,'Ver histórico')}</div>`).join(''):empty('Nenhuma sugestão neste momento.')}</article>`).join('');$('insightsGrid').innerHTML=html;$('iSummary').innerHTML=`<p>${esc(d.note||'Confira o histórico antes de entrar em contato.')}</p><div class="insights-grid">${html}</div>`;}
 async function loadHealth(){const d=await api('health');$('healthList').innerHTML=(d.metrics||d.health||[]).slice(0,15).map(x=>`<div class="health-item"><strong>${esc(x.metric_type||x.metric_name||x.status||'Registro')}</strong><p>${esc(x.metric_value??x.value??x.details??'')}</p><small>${dt(x.checked_at||x.created_at||x.measured_at)}</small></div>`).join('')||empty('Nenhum diagnóstico recente registrado.');const settings=Array.isArray(d.settings)?d.settings:Object.entries(d.settings||{}).map(([setting_key,setting_value])=>({setting_key,setting_value}));$('settingsList').innerHTML=settings.map(x=>`<div class="health-item"><strong>${esc(x.setting_key)}</strong><span>${esc(x.setting_value)}</span></div>`).join('')||empty('Nenhuma configuração disponível.');}
 document.addEventListener('click',async e=>{const b=e.target.closest('button,[data-goto]');if(!b||b.disabled)return;try{
+ if(b.dataset.mobileBack!==undefined){document.body.classList.remove('mobile-chat-open');state.contact=null;state.detail=null;state.messageOffset=0;$('conversationDetail').dataset.contact='';$('conversationDetail').innerHTML=empty('Selecione uma conversa.');return;}
  if(b.dataset.contact){await openContact(b.dataset.contact);return;}
  if(b.dataset.page){await goto(b.dataset.page);return;}
  if(b.dataset.goto){await goto(b.dataset.goto);return;}
@@ -170,6 +172,25 @@ $('refreshBtn').onclick=async()=>{try{await refresh();status(true,'Conectado');t
 $('logoutBtn').onclick=()=>dialog('Desconectar painel','<p>Remove a conexão deste navegador. As conversas e o atendimento da Iana continuam funcionando.</p>','Desconectar',async()=>{localStorage.removeItem(LS_URL);localStorage.removeItem(LS_KEY);sessionStorage.removeItem('iana_v53_retries');clearTimeout(state.timer);location.reload();});
 $('menuBtn').onclick=()=>{$('sidebar').classList.toggle('open');$('drawerOverlay').classList.toggle('open');};$('drawerOverlay').onclick=()=>{$('sidebar').classList.remove('open');$('drawerOverlay').classList.remove('open');};
 $('closeDialogBtn').onclick=$('cancelDialogBtn').onclick=closeDialog;
+const isStandalone=()=>window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
+function syncInstallUi(){
+ const button=$('installAppBtn'),copy=$('appInstallStatus');if(!button||!copy)return;
+ document.body.classList.toggle('standalone-app',isStandalone());
+ if(isStandalone()){button.textContent='Aplicativo instalado';button.disabled=true;copy.textContent='A Iana Gestão já está instalada neste celular.';return;}
+ button.disabled=false;
+ const ios=/iPhone|iPad|iPod/i.test(navigator.userAgent);
+ button.textContent=ios?'Instalar no iPhone':'Instalar aplicativo';
+ copy.textContent=ios?'Use este botão para ver o passo a passo no iPhone.':'Instale para abrir em tela cheia pelo ícone do celular.';
+}
+window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();state.installPrompt=event;syncInstallUi();});
+window.addEventListener('appinstalled',()=>{state.installPrompt=null;syncInstallUi();toast('Iana Gestão instalada.');});
+$('installAppBtn').onclick=async()=>{
+ if(isStandalone())return;
+ if(state.installPrompt){const prompt=state.installPrompt;state.installPrompt=null;await prompt.prompt();await prompt.userChoice;syncInstallUi();return;}
+ const ios=/iPhone|iPad|iPod/i.test(navigator.userAgent);
+ dialog(ios?'Instalar no iPhone':'Instalar no celular',ios?'<div class="install-steps"><p><strong>1.</strong> Abra esta página no Safari.</p><p><strong>2.</strong> Toque no botão Compartilhar <span class="share-symbol">↥</span>.</p><p><strong>3.</strong> Escolha <b>Adicionar à Tela de Início</b>.</p><p><strong>4.</strong> Ative <b>Abrir como App da Web</b> e toque em <b>Adicionar</b>.</p></div>':'<p>Abra o menu do navegador e escolha <b>Instalar aplicativo</b> ou <b>Adicionar à tela inicial</b>.</p>','',null);
+};
+syncInstallUi();
 for(const [button,delta] of [['agendaPrevBtn',-1],['agendaNextBtn',1],['agendaTodayBtn',0]])$(button).onclick=()=>{state.week=delta===0?0:state.week+delta;loadAgenda().catch(e=>toast(humanError(e)));};
 document.addEventListener('visibilitychange',()=>{if(document.hidden)clearTimeout(state.timer);else{state.lastFull=0;poll();}});
 $('todayLabel').textContent=format(Date.now(),{weekday:'long',day:'2-digit',month:'long'});

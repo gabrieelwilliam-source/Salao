@@ -1,9 +1,21 @@
 {
+  "id": "./",
   "name": "Iana Gestão · Salão Nayara",
   "short_name": "Iana Gestão",
-  "start_url": "./",
+  "description": "Atendimento, agenda e gestão do Salão Nayara.",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "start_url": "./?app=1",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f5f3f8",
-  "theme_color": "#241d2b"
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#faf7f3",
+  "theme_color": "#241d2b",
+  "categories": ["business", "productivity"],
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
 }

@@ -1,0 +1,3 @@
+Iana Gestão V53.3 PWA 1.0
+Compatível com a API do painel V53
+Aplicativo web instalável gratuito para iPhone e Android

@@ -147,3 +147,28 @@ body{font-size:16px}button,input,select,textarea{font:inherit}button,a{touch-act
 @media(max-width:1100px){.conversations-layout{grid-template-columns:300px minmax(0,1fr)}.agenda-live-grid{grid-template-columns:repeat(7,minmax(150px,1fr))}.client-summary-strip{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){.conversations-layout{display:flex;flex-direction:column}.list-panel{max-height:370px;overflow:auto}.conversation-detail{padding:16px}.conversation-tools .btn{flex:1 1 42%}.chat{max-height:430px}.chat .message{max-width:93%}.compose-footer{align-items:flex-start}.compose-footer small{max-width:64%}.urgent-item{flex-wrap:wrap}.urgent-item .btn{margin-left:auto}.topbar-right .live-pill{display:none}.handoff-inline{align-items:flex-start;flex-direction:column}.section-intro{gap:16px;flex-wrap:wrap}.dialog-head h2{font-size:19px}dialog{padding:18px}.client-summary-strip{grid-template-columns:1fr 1fr}.pager{padding:12px 4px}.profile-copy{display:none}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+/* Iana Gestão PWA: instalação e experiência de atendimento no celular. */
+body{padding-top:env(safe-area-inset-top);padding-right:env(safe-area-inset-right);padding-bottom:env(safe-area-inset-bottom);padding-left:env(safe-area-inset-left)}
+.app-install-panel{display:flex;align-items:center;justify-content:space-between;gap:22px;background:linear-gradient(135deg,#fff 0%,#f7eff9 100%)}
+.app-install-copy{display:flex;align-items:center;gap:14px;min-width:0}.app-install-copy h3{margin:0 0 5px}.app-install-copy p{margin:0;color:var(--muted);font-size:14px;line-height:1.45}
+.app-install-icon{width:52px;height:52px;flex:0 0 52px;display:grid;place-items:center;border-radius:15px;background:linear-gradient(145deg,#332338,#8d628e);color:#fff;font:700 27px Georgia,serif;box-shadow:0 10px 25px #4d305333}
+.mobile-back-btn{display:none;border:0;background:transparent;color:var(--accent);font-weight:700;font-size:14px;padding:8px 0;margin-bottom:4px}.install-steps{font-size:16px;line-height:1.55}.install-steps p{margin:14px 0}.share-symbol{display:inline-grid;place-items:center;width:28px;height:28px;border:1px solid var(--border);border-radius:8px;color:#1674cf;font-size:20px}
+@media(max-width:860px){
+ .mobile-chat-open .conversations-layout .list-panel{display:none}
+ .mobile-chat-open .conversations-layout .conversation-detail{display:block}
+ .mobile-chat-open .mobile-back-btn{display:inline-flex;align-items:center;min-height:42px}
+ .app-install-panel{align-items:flex-start;flex-direction:column}.app-install-panel .btn{width:100%}
+}
+@media(max-width:560px){
+ .mobile-chat-open .content{padding-left:8px;padding-right:8px;padding-bottom:calc(16px + env(safe-area-inset-bottom))}
+ .mobile-chat-open .topbar{min-height:58px}
+ .mobile-chat-open .conversation-detail{padding:12px!important;border-radius:18px!important}
+ .mobile-chat-open .conv-detail-head{align-items:flex-start;gap:8px}
+ .mobile-chat-open .conv-person{min-width:0}.mobile-chat-open .conv-person>div:last-child{min-width:0}.mobile-chat-open .conv-person p{overflow:hidden;text-overflow:ellipsis}
+ .mobile-chat-open .conversation-tools{display:grid;grid-template-columns:1fr 1fr}
+ .mobile-chat-open .conversation-tools .btn{width:100%;min-width:0}
+ .mobile-chat-open .chat{max-height:48vh;min-height:280px;padding:12px 4px}
+ .mobile-chat-open .compose{position:sticky;bottom:max(6px,env(safe-area-inset-bottom));z-index:8;margin-left:-4px;margin-right:-4px;padding:14px;box-shadow:0 -12px 30px #2e1e3520}
+ .mobile-chat-open .compose-footer{flex-direction:column}.mobile-chat-open .compose-footer small{max-width:100%}.mobile-chat-open .compose-footer .btn{width:100%}
+}

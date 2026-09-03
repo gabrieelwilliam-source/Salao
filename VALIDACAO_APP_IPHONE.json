@@ -1,0 +1,27 @@
+{
+  "version": "Iana Gestão V53.3 PWA 1.0",
+  "passed": 24,
+  "productionTested": false,
+  "browserVisualTested": false,
+  "externalMessagesSent": 0,
+  "groups": {
+    "estrutura_e_seguranca": 16,
+    "comportamento_pwa": 8
+  },
+  "validated": [
+    "manifesto standalone com URLs relativas ao GitHub Pages",
+    "ícones 180, 192 e 512 pixels",
+    "metadados de instalação no iPhone",
+    "registro e atualização do service worker",
+    "cache restrito à interface do mesmo domínio",
+    "chamadas da API externa fora do cache",
+    "nenhuma chave de acesso longa gravada nos arquivos",
+    "referências locais existentes e IDs HTML únicos",
+    "JavaScript válido nos três arquivos executáveis",
+    "abertura de conversa no modo celular",
+    "retorno para a lista de conversas",
+    "remoção correta do modo de conversa ao mudar de página",
+    "instrução específica para instalação no iPhone",
+    "área de resposta adaptada à região segura do aparelho"
+  ]
+}

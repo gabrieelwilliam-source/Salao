@@ -1,10 +1,19 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#241d2b">
+<meta name="description" content="Atendimento, agenda e gestão do Salão Nayara.">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Iana Gestão">
+<meta name="format-detection" content="telephone=no">
 <title>Iana Gestão · Salão Nayara</title>
-<link rel="manifest" href="manifest.json?v=530"><link rel="stylesheet" href="styles.css?v=530">
+<link rel="manifest" href="manifest.json?v=533">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="stylesheet" href="styles.css?v=533">
 
 
 
@@ -94,13 +103,20 @@
     <button class="btn secondary" id="testConnectionBtn">Testar conexão agora</button>
   </div>
 </article>
+<article class="panel span-2 app-install-panel" id="appInstallPanel">
+  <div class="app-install-copy">
+    <div class="app-install-icon" aria-hidden="true">I</div>
+    <div><h3>Aplicativo no celular</h3><p id="appInstallStatus">Instale a Iana Gestão na Tela de Início para abrir como aplicativo.</p></div>
+  </div>
+  <button class="btn primary" id="installAppBtn" type="button">Instalar aplicativo</button>
+</article>
 <article class="panel"><div class="panel-head"><div><h3>Status</h3><p>Últimas 24 horas.</p></div></div><div id="healthList" class="health-list loading-block">Carregando…</div></article><article class="panel"><div class="panel-head"><div><h3>Configuração atual</h3><p>Somente leitura nesta versão.</p></div></div><div id="settingsList" class="health-list loading-block">Carregando…</div></article><article class="panel span-2"><div class="panel-head"><div><h3>Realtime</h3><p>As consultas pausam quando você sai desta aba. Ao voltar, os dados são atualizados.</p></div><span class="secure-pill" id="realtimeDetail">conectando</span></div><div class="security-grid"><div><span>✓</span><p><strong>Sem acesso direto</strong> A conexão passa pela API do painel.</p></div><div><span>✓</span><p><strong>API protegida</strong> A leitura exige uma chave longa gerada no banco.</p></div><div><span>✓</span><p><strong>Última atualização</strong> Mudanças aparecem em automática enquanto o painel estiver aberto, sem F5.</p></div><div><span>✓</span><p><strong>Banco existente</strong> Funciona com o PostgreSQL atual através do n8n.</p></div></div></article></div></div>
 </section>
 </main>
 </div>
 <div class="drawer-overlay" id="drawerOverlay"></div><div class="toast" id="toast" role="status" aria-live="polite"></div>
 <dialog id="actionDialog" aria-labelledby="dialogTitle"><form id="actionForm"><div class="dialog-head"><h2 id="dialogTitle"></h2><button type="button" id="closeDialogBtn" class="icon-btn" aria-label="Fechar">×</button></div><div id="dialogFields"></div><p id="dialogError" class="form-error" role="alert"></p><div class="dialog-actions"><button type="button" id="cancelDialogBtn" class="btn secondary">Cancelar</button><button type="submit" id="dialogSubmit" class="btn primary">Salvar</button></div></form></dialog>
-<script src="cache-migration.js?v=530"></script><script src="app.js?v=530"></script>
+<script src="cache-migration.js?v=533"></script><script src="app.js?v=533"></script>
 
 
 
