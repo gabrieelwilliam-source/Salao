@@ -1,182 +1,178 @@
-const pages = {
-  dashboard: ["Dashboard","Visão geral do salão e da operação da Iana."],
-  conversas: ["Conversas","Acompanhe atendimento, contexto e resumo de cada cliente."],
-  pendencias: ["Precisa da Nayara","Decisões que a Iana não pode tomar sozinha."],
-  agenda: ["Agenda","Solicitações, confirmações e histórico de atendimento."],
-  clientes: ["Clientes","CRM completo com preferências e relacionamento."],
-  financeiro: ["Financeiro","Orçamentos, cobranças e pagamentos sem misturar conceitos."],
-  resumos: ["Resumos da Iana","Análises e oportunidades extraídas das conversas."],
-  iana: ["Iana / Sistema","Saúde do agente e controles operacionais."]
-};
-
-const urgent = [
-  {name:"Ana Souza", reason:"Confirmar disponibilidade", detail:"Mechas · sexta-feira à tarde", priority:"normal", ago:"há 12 min"},
-  {name:"Juliana Martins", reason:"Orçamento personalizado", detail:"Coloração · foto e objetivo recebidos", priority:"normal", ago:"há 18 min"},
-  {name:"Carla Ribeiro", reason:"Reclamação", detail:"Relatou insatisfação com o resultado", priority:"high", ago:"há 7 min"}
-];
-
-const agenda = [
-  {time:"09:00", name:"Amanda Lima", service:"Corte", status:"realizado"},
-  {time:"10:30", name:"Bruna Alves", service:"Tratamento capilar", status:"confirmado"},
-  {time:"14:00", name:"Ana Souza", service:"Mechas", status:"aguardando"},
-  {time:"16:00", name:"Fernanda Reis", service:"Corte", status:"solicitacao"},
-  {time:"17:30", name:"Mariana Luz", service:"Cronograma capilar", status:"confirmado"}
-];
-
-const conversations = [
-  {id:1,name:"Ana Souza", initials:"AS", state:"iana", time:"16:08", last:"Queria saber se tem horário sexta à tarde.", service:"Mechas", value:"R$ 450 informado", status:"Aguardando Nayara"},
-  {id:2,name:"Carla Ribeiro", initials:"CR", state:"nayara", time:"15:42", last:"Queria falar com a Nayara sobre meu cabelo.", service:"Coloração", value:"—", status:"Nayara assumiu"},
-  {id:3,name:"Amanda Lima", initials:"AL", state:"iana", time:"15:18", last:"Obrigada, ficou ótimo!", service:"Corte", value:"R$ 80 pago", status:"Encerrado"},
-  {id:4,name:"Juliana Martins", initials:"JM", state:"iana", time:"14:51", last:"Mandei a foto que você pediu.", service:"Coloração", value:"Avaliação", status:"Aguardando Nayara"},
-  {id:5,name:"Fernanda Reis", initials:"FR", state:"iana", time:"14:22", last:"Sexta de tarde seria melhor.", service:"Corte", value:"R$ 80", status:"Coletando preferência"},
-  {id:6,name:"Patrícia Moraes", initials:"PM", state:"iana", time:"13:49", last:"Quanto fica o tratamento?", service:"Tratamento", value:"R$ 200", status:"Iana atendendo"},
-  {id:7,name:"Luana Costa", initials:"LC", state:"nayara", time:"12:31", last:"Fiz o pix, caiu aí?", service:"Mechas", value:"R$ 480", status:"Nayara assumiu"},
-  {id:8,name:"Débora Alves", initials:"DA", state:"iana", time:"11:54", last:"Pode ser amanhã de manhã.", service:"Cronograma", value:"R$ 450", status:"Aguardando Nayara"}
-];
-
-const chatByConversation = {
-  1:[
-    ["client","Oi Nay, quanto fica a mecha?","15:52"],
-    ["nayara","Para você fica 450.","15:57"],
-    ["client","Entendi. E tem horário sexta à tarde?","16:08"],
-    ["iana","Anotei mechas para sexta-feira à tarde como preferência. Vou passar para a Nayara confirmar a disponibilidade.","16:08"]
-  ],
-  2:[
-    ["client","Oi, queria falar com a Nayara sobre o resultado.","15:37"],
-    ["iana","Claro. Vou encaminhar sua mensagem para a Nayara dar continuidade ao atendimento.","15:37"],
-    ["nayara","Oi Carla, me conta o que aconteceu.","15:42"]
-  ],
-  3:[
-    ["client","Obrigada, ficou ótimo!","15:18"],
-    ["iana","Que bom saber! 😊","15:18"]
-  ]
-};
-
-const clients = [
-  ["Ana Souza","Mechas","12 dias","R$ 1.350","Recorrente"],
-  ["Amanda Lima","Corte","Hoje","R$ 2.470","VIP / recorrente"],
-  ["Carla Ribeiro","Coloração","21 dias","R$ 520","Atenção"],
-  ["Juliana Martins","Tratamento","36 dias","R$ 840","Ativa"],
-  ["Fernanda Reis","Corte","62 dias","R$ 640","Reativar"],
-  ["Bruna Alves","Tratamento","Hoje","R$ 1.120","2 faltas"],
-  ["Patrícia Moraes","Cronograma","44 dias","R$ 900","Ativa"]
-];
-
-const finance = [
-  ["Amanda Lima","Corte","Pago","R$ 80","Pix","Conversa / Nayara"],
-  ["Bruna Alves","Tratamento","Pago","R$ 200","Cartão","Registro Nayara"],
-  ["Luana Costa","Mechas","Pago","R$ 480","Pix","Conversa / Nayara"],
-  ["Mariana Luz","Cronograma","Pago","R$ 450","Pix","Registro Nayara"],
-  ["Ana Souza","Mechas","Orçamento","R$ 450","—","Conversa / Nayara"],
-  ["Fernanda Reis","Corte","Cobrado","R$ 80","—","Catálogo"]
-];
-
-const weekAgenda = [
-  {day:"Segunda",date:"17 AGO",items:[["09:30","Amanda","Corte","realizado"],["14:00","Luana","Mechas","realizado"]]},
-  {day:"Terça",date:"18 AGO",items:[["09:00","Amanda","Corte","realizado"],["10:30","Bruna","Tratamento","confirmado"],["14:00","Ana","Mechas","aguardando"]]},
-  {day:"Quarta",date:"19 AGO",items:[["10:00","Patrícia","Tratamento","confirmado"],["15:30","Mariana","Cronograma","confirmado"]]},
-  {day:"Quinta",date:"20 AGO",items:[["09:30","Juliana","Coloração","aguardando"],["16:00","Débora","Corte","solicitacao"]]},
-  {day:"Sexta",date:"21 AGO",items:[["13:00","Fernanda","Corte","solicitacao"],["14:30","Ana","Mechas","aguardando"],["17:00","Camila","Tratamento","confirmado"]]}
-];
-
-function escapeHtml(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
-function statusLabel(s){return ({confirmado:"Confirmado",aguardando:"Aguardando Nayara",solicitacao:"Solicitação",realizado:"Realizado",reclamacao:"Reclamação"})[s]||s}
-function initials(name){return name.split(/\s+/).slice(0,2).map(x=>x[0]).join("").toUpperCase()}
-
-function renderUrgent(){
-  const el=document.getElementById("urgentList");
-  el.innerHTML=urgent.map(u=>`<div class="urgent-item">
-    <div class="urgent-avatar">${initials(u.name)}</div>
-    <div><h4>${escapeHtml(u.name)} · ${escapeHtml(u.reason)}</h4><p>${escapeHtml(u.detail)} · ${u.ago}</p></div>
-    <span class="priority ${u.priority}">${u.priority==="high"?"Alta":"Normal"}</span>
-  </div>`).join("");
+/* Iana Gestão V53 — no third-party runtime or live credentials in this bundle. */
+window.IANA_WEB_BUILD='53.0';
+(() => {
+'use strict';
+const $=id=>document.getElementById(id),TZ='America/Sao_Paulo';
+const LS_URL='iana_n8n_api_url',LS_KEY='iana_n8n_access_key';
+const state={page:'dashboard',contact:null,detail:null,finance:'today',week:0,offset:{conversations:0,pending:0,clients:0,finance:0},drafts:new Map(),seq:{},timer:null,syncBusy:false,cursor:0,lastFull:0,failures:0,connected:false,refresh:null,messageOffset:0};
+const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+const money=v=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Number(v||0)/100);
+const format=(v,opts)=>{const d=new Date(v);return !v||!Number.isFinite(d.getTime())?'—':new Intl.DateTimeFormat('pt-BR',{timeZone:TZ,...opts}).format(d)};
+const dt=v=>format(v,{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+const time=v=>format(v,{hour:'2-digit',minute:'2-digit'});
+const date=v=>format(v,{day:'2-digit',month:'2-digit',year:'numeric'});
+const ymd=v=>new Intl.DateTimeFormat('en-CA',{timeZone:TZ,year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(v));
+const ago=v=>{const n=Math.max(0,Math.floor((Date.now()-new Date(v).getTime())/60000));return !Number.isFinite(n)?'—':n<1?'agora':n<60?`há ${n} min`:n<1440?`há ${Math.floor(n/60)} h`:`há ${Math.floor(n/1440)} dias`};
+const initials=v=>String(v||'Cliente').split(/\s+/).slice(0,2).map(s=>s[0]||'').join('').toUpperCase();
+const empty=v=>`<div class="empty-state">${esc(v)}</div>`;
+const labels={confirmado:'Confirmado',confirmed:'Confirmado',agendado:'Agendado',realizado:'Realizado',cancelado:'Cancelado',faltou:'Faltou',aguardando_nayara:'Aguardando você',em_atendimento:'Em atendimento',resolvido:'Concluído',ignorado:'Removido',paid:'Pagamento',charged:'Cobrança',quote:'Orçamento',discount:'Desconto',refund:'Reembolso',takeover:'Nayara assumiu',release:'Devolvido à Iana',save_note:'Observações atualizadas',resolve_handoff:'Pendência concluída',ignore_handoff:'Pendência removida',reopen_handoff:'Pendência reaberta',appointment:'Agenda atualizada',financial:'Valor registrado',send_message:'Mensagem de Nayara',reconcile_message:'Entrega conferida'};
+const label=v=>labels[v]||v||'—';
+const errors={unauthorized:'A chave de acesso está incorreta.',connection_not_configured:'Configure a conexão do painel.',backend_version:'Atualize primeiro a API do painel para V53.',record_changed:'Este registro mudou. Feche esta janela, atualize os dados e tente novamente.',review_delivery_first:'Há um envio aguardando conferência. Verifique a entrega no WhatsApp antes de continuar.',handoff_not_open:'Esta pendência já foi encerrada. Atualize a fila.',another_handoff_open:'Esta cliente já tem outra pendência aberta.',handoff_cannot_reopen:'Esta pendência não pode ser reaberta.',invalid_amount:'Informe um valor maior que zero.',future_appointment_required:'Escolha uma data e um horário futuros.',appointment_not_active:'Este agendamento já mudou ou não está ativo.',appointment_not_started:'O horário do atendimento ainda não chegou.',time_already_booked:'Já existe um atendimento nesse horário.',service_required:'Informe o serviço.',delivery_still_running_or_already_reviewed:'O envio ainda pode estar em andamento ou já foi conferido.',request_id_conflict:'A tentativa anterior usa outros dados. Atualize antes de continuar.',invalid_message_length:'Escreva uma mensagem de até 3.500 caracteres.',note_too_long:'Use até 5.000 caracteres nas observações.'};
+function humanError(e){if(e?.name==='AbortError')return 'A conexão demorou a responder. Atualize para conferir o resultado antes de repetir a ação.';const m=String(e?.message||e);return errors[m]||(m.includes('Failed to fetch')?'Não foi possível acessar a API. Verifique a conexão e se o fluxo está ativo.':m.startsWith('HTTP')?'A API não respondeu corretamente. Tente atualizar.':m.includes('permission denied')?'A credencial do banco precisa de acesso às funções do painel. Consulte as instruções de instalação.':'Não foi possível concluir. Atualize e tente novamente.');}
+function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('toast').classList.remove('show'),6000);}
+function config(){return {url:localStorage.getItem(LS_URL)||'',key:localStorage.getItem(LS_KEY)||''};}
+function status(ok,msg){state.connected=ok;$('realtimeDot').className='status-dot '+(ok?'online':'offline');$('realtimeLabel').textContent=msg;$('realtimeDetail').textContent=msg;document.querySelectorAll('[data-live-label]').forEach(e=>e.textContent=msg);document.querySelectorAll('[data-live-dot]').forEach(e=>e.className='status-dot '+(ok?'online':'offline'));$('connectionWarning').classList.toggle('hidden',ok);$('connectionWarning').textContent=ok?'':'Dados podem estar desatualizados. '+msg;$('apiConnectionStatus').textContent=ok?'Conectado':'Sem confirmação';}
+async function api(action,params={},cfg=config()){
+ if(!cfg.url||!cfg.key)throw new Error('connection_not_configured');
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),action==='send_message'||action==='media'?45000:20000);
+ try{const response=await fetch(cfg.url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({access_key:cfg.key,action,params}),cache:'no-store',signal:controller.signal});
+ if(!response.ok)throw new Error('HTTP '+response.status);const body=await response.json();if(body?.ok!==true){const e=new Error(body?.error||'invalid_response');e.confirmedFailure=true;throw e;}return Object.hasOwn(body,'data')?body.data:body;
+ }finally{clearTimeout(timer);}
 }
-function renderTodayAgenda(){
-  document.getElementById("todayAgenda").innerHTML=agenda.map(a=>`<div class="timeline-item">
-    <div class="timeline-time">${a.time}</div><div class="timeline-dot"></div>
-    <div class="timeline-main"><strong>${a.name}</strong><small>${a.service}</small></div>
-    <span class="status ${a.status}">${statusLabel(a.status)}</span>
-  </div>`).join("");
+function id(){return crypto.randomUUID().replace(/-/g,'');}
+const retries=new Map();
+try{for(const [k,v] of JSON.parse(sessionStorage.getItem('iana_v53_retries')||'[]'))if(Date.now()-v.at<86400000)retries.set(k,v);}catch(e){}
+function saveRetries(){try{sessionStorage.setItem('iana_v53_retries',JSON.stringify([...retries].slice(-30)));}catch(e){}}
+async function mutate(action,params){
+ const key=JSON.stringify([config().url,action,params]);let ticket=retries.get(key);if(!ticket){ticket={id:id(),at:Date.now()};retries.set(key,ticket);saveRetries();}
+ try{const r=await api(action,{...params,request_id:ticket.id});if(r?.success===false&&r?.delivery_status!=='unknown'&&r?.delivery_status!=='pending')throw new Error(r.error||'action_failed');retries.delete(key);saveRetries();return r;}
+ catch(e){if(e.confirmedFailure){retries.delete(key);saveRetries();}throw e;}
 }
-function renderConversationList(filter="all"){
-  const rows=conversations.filter(c=>filter==="all"||c.state===filter);
-  document.getElementById("conversationList").innerHTML=rows.map(c=>`<div class="conv-item" data-conv="${c.id}">
-    <div class="avatar">${c.initials}</div>
-    <div><h4>${c.name}</h4><p>${c.last}</p></div>
-    <div class="conv-meta"><small>${c.time}</small><span class="channel-state ${c.state}">${c.state==="iana"?"Iana":"Nayara"}</span></div>
-  </div>`).join("");
-  document.querySelectorAll("[data-conv]").forEach(x=>x.onclick=()=>showConversation(Number(x.dataset.conv)));
-  if(rows[0]) showConversation(rows[0].id);
+function stamp(){$('lastSyncLabel').textContent='Atualizado às '+format(new Date(),{hour:'2-digit',minute:'2-digit',second:'2-digit'});}
+function gate(message){$('gateMessage').textContent=message;}
+function openSettings(){const c=config();$('apiUrl').value=c.url;$('apiKey').value=c.key;$('cancelConnectionBtn').classList.toggle('hidden',!c.url);$('setupScreen').classList.remove('hidden');}
+async function connect(candidate){
+ const p=await api('ping',{},candidate);if(!String(p.version||'').startsWith('53.'))throw new Error('backend_version');
+ // Persist only after the candidate has passed validation.
+ localStorage.setItem(LS_URL,candidate.url);localStorage.setItem(LS_KEY,candidate.key);state.cursor=Number(p.latest_event_id||0);state.failures=0;
+ $('setupScreen').classList.add('hidden');$('app').classList.remove('hidden');$('currentApiUrl').textContent=candidate.url;$('userLabel').textContent='Nayara';
+ try{await refresh();status(true,'Conectado');}catch(e){status(false,'Falha ao atualizar');toast(humanError(e));}schedule();
 }
-function showConversation(id){
-  document.querySelectorAll("[data-conv]").forEach(x=>x.classList.toggle("active",Number(x.dataset.conv)===id));
-  const c=conversations.find(x=>x.id===id); if(!c)return;
-  const messages=chatByConversation[id]||[["client",c.last,c.time],["iana","Conversa resumida pela Iana. O histórico completo aparecerá aqui quando o painel estiver conectado ao banco.",c.time]];
-  document.getElementById("conversationDetail").innerHTML=`<div class="conv-detail-head">
-    <div class="conv-person"><div class="avatar">${c.initials}</div><div><h3>${c.name}</h3><p>WhatsApp · contato cadastrado</p></div></div>
-    <div class="conv-tags"><span class="mini-tag">${c.service}</span><span class="mini-tag">${c.status}</span></div>
-  </div>
-  <div class="client-summary-strip">
-    <div><span>Serviço</span><strong>${c.service}</strong></div>
-    <div><span>Valor</span><strong>${c.value}</strong></div>
-    <div><span>Responsável</span><strong>${c.state==="iana"?"Iana":"Nayara"}</strong></div>
-    <div><span>Prioridade</span><strong>${id===2?"Alta":"Normal"}</strong></div>
-  </div>
-  <div class="chat">${messages.map(m=>`<div class="message ${m[0]}">${escapeHtml(m[1])}<div class="time">${m[2]}</div></div>`).join("")}</div>
-  <div class="observer-box"><strong>✦ Observador da Iana:</strong> ${id===1?"Nayara informou R$ 450 para mechas. Cliente prefere sexta à tarde. Valor registrado como orçamento, não como pagamento.":id===2?"Handoff humano detectado. Iana permanece em silêncio e continua observando a conversa.":"Contexto e fatos relevantes desta conversa ficam registrados no CRM."}</div>`;
+function schedule(){clearTimeout(state.timer);if(document.hidden||!config().key)return;state.timer=setTimeout(poll,Math.min(60000,(state.page==='conversas'?5000:15000)*Math.max(1,2**state.failures)));}
+async function poll(){if(state.syncBusy||document.hidden){schedule();return;}state.syncBusy=true;
+ try{const s=await api('sync',{since_event_id:state.cursor});if(s.reset_required||s.changed_sources?.length||Date.now()-state.lastFull>60000)await refresh();state.cursor=Number(s.latest_event_id||0);state.failures=0;status(true,'Conectado');}
+ catch(e){state.failures=Math.min(3,state.failures+1);status(false,'Tentando reconectar');}finally{state.syncBusy=false;schedule();}
 }
-function renderPending(){
-  document.getElementById("pendingCards").innerHTML=urgent.map(u=>`<article class="pending-card">
-    <div class="pending-top"><span class="priority ${u.priority}">${u.priority==="high"?"Alta prioridade":"Ação humana"}</span><small>${u.ago}</small></div>
-    <h3>${u.name}</h3><p>${u.reason}. ${u.detail}.</p>
-    <div class="pending-info"><div><span>Origem</span><strong>WhatsApp</strong></div><div><span>Status</span><strong>Aguardando você</strong></div></div>
-    <div class="pending-actions"><button class="btn secondary" onclick="toast('Conversa aberta em modo demonstração.')">Ver conversa</button><button class="btn primary" onclick="toast('Ação registrada localmente. A integração com n8n será conectada depois.')">Assumir</button></div>
-  </article>`).join("");
+async function refresh(){if(state.refresh)return state.refresh;state.refresh=(async()=>{await Promise.all([loadDashboard(),loadPending(state.page==='pendencias')]);await loadCurrent();state.lastFull=Date.now();stamp();})().finally(()=>state.refresh=null);return state.refresh;}
+const titles={dashboard:['Hoje','O que precisa da sua atenção.'],conversas:['Conversas','Cliente, Iana e Nayara no mesmo histórico.'],pendencias:['Precisa de você','Decisões e próximos passos.'],agenda:['Agenda','Horários no fuso de Joinville.'],clientes:['Clientes','Histórico e preferências.'],financeiro:['Financeiro','Valores registrados por atendimento.'],resumos:['Resumos','Oportunidades para revisar.'],inteligencia:['Inteligência','Informações para decidir.'],iana:['Iana / Sistema','Conexão e funcionamento.']};
+async function goto(page){if(!titles[page])return;state.page=page;document.querySelectorAll('.page').forEach(e=>e.classList.toggle('active',e.id==='page-'+page));document.querySelectorAll('.nav-item').forEach(e=>e.classList.toggle('active',e.dataset.page===page));[$('pageTitle').textContent,$('pageSubtitle').textContent]=titles[page];$('sidebar').classList.remove('open');$('drawerOverlay').classList.remove('open');try{await loadCurrent();}catch(e){toast(humanError(e));status(false,'Falha ao atualizar');}schedule();}
+async function loadCurrent(){switch(state.page){case 'conversas':return loadConversations();case 'pendencias':return loadPending(true);case 'agenda':return loadAgenda();case 'clientes':return loadClients();case 'financeiro':return loadFinance();case 'resumos':case 'inteligencia':return loadInsights();case 'iana':return loadHealth();}}
+function pager(container,kind,total){const offset=state.offset[kind],end=Math.min(total,offset+50);$(container).innerHTML=`<span>${total?offset+1:0}–${end} de ${total}</span><button class="btn secondary" data-page-list="${kind}" data-delta="-50" ${offset===0?'disabled':''}>Anterior</button><button class="btn secondary" data-page-list="${kind}" data-delta="50" ${end>=total?'disabled':''}>Próxima</button>`;}
+function contactButton(k,text='Ver conversa',style='secondary'){return `<button class="btn ${style}" data-contact="${esc(k)}">${esc(text)}</button>`;}
+async function loadDashboard(){const d=await api('dashboard'),m=d.metrics||{},f=d.funnel||{};$('mConversations').textContent=m.conversations||0;$('mPending').textContent=m.pending_nayara||0;$('navPending').textContent=m.pending_nayara||0;$('mAppointments').textContent=m.appointments_today||0;$('mReceived').textContent=money(m.received_cents);$('mPaidCount').textContent=`${m.paid_count||0} pagamentos`;
+ $('funnel').innerHTML=[['Conversas',f.conversations],['Interesse em serviço',f.service_interest],['Pedidos de horário',f.schedule_requests],['Horários confirmados',f.confirmed]].map(([name,n])=>`<div class="funnel-row"><span>${name}</span><b>${n||0}</b></div>`).join('');
+ $('todayAgenda').innerHTML=d.agenda_today?.length?d.agenda_today.map(a=>`<div class="timeline-item"><div class="timeline-time">${time(a.appointment_at)}</div><div class="timeline-main"><strong>${esc(a.customer_name)}</strong><small>${esc(a.service_name)}</small></div>${contactButton(a.contact_key,'Abrir')}</div>`).join(''):empty('Nenhum atendimento registrado para hoje.');
+ $('quickSummary').innerHTML=`<p><strong>${m.pending_nayara||0}</strong> pendências aguardando sua atenção.</p><p><strong>${m.appointments_today||0}</strong> atendimentos na agenda de hoje.</p><p>Entradas registradas: <strong>${money(m.received_cents)}</strong>.</p>`;
 }
-function renderAgenda(){
-  document.getElementById("agendaBoard").innerHTML=weekAgenda.map(d=>`<section class="day-col"><div class="day-head"><strong>${d.day}</strong><span>${d.date}</span></div>
-    ${d.items.map(a=>`<div class="appointment"><strong>${a[0]} · ${a[1]}</strong><span>${a[2]}</span><span class="status ${a[3]}">${statusLabel(a[3])}</span></div>`).join("")}
-  </section>`).join("");
+function card(p){return `<article class="pending-card"><div class="pending-top"><span class="priority ${p.priority==='alta'?'high':'normal'}">${p.priority==='alta'?'Prioridade alta':'Aguardando você'}</span><small>${ago(p.created_at)}</small></div><h3>${esc(p.display_name||p.customer_name)}</h3><strong class="next-action">${esc(p.action_required)}</strong><p>${esc(p.summary||'Leia a conversa para continuar.')}</p>${p.last_customer_message?`<blockquote class="customer-quote">${esc(p.last_customer_message)}</blockquote>`:''}<div class="pending-info"><div><span>Serviço</span><strong>${esc(p.service_name||'A definir')}</strong></div><div><span>Situação</span><strong>${esc(label(p.status))}</strong></div>${p.due_at?`<div><span>Retornar até</span><strong>${dt(p.due_at)}</strong></div>`:''}</div><div class="pending-actions">${contactButton(p.contact_key,'Atender','primary')}<button class="btn secondary" data-action="resolve" data-handoff="${esc(p.id)}" data-key="${esc(p.contact_key)}">Concluir</button><button class="btn danger-soft" data-action="ignore" data-handoff="${esc(p.id)}" data-key="${esc(p.contact_key)}">Remover</button></div></article>`;}
+async function loadPending(full=false){const seq=(state.seq.pending||0)+1;state.seq.pending=seq;const d=await api('pending',{p_limit:50,p_offset:full?state.offset.pending:0});if(seq!==state.seq.pending)return;$('navPending').textContent=d.total||0;
+ if(full){$('pendingCards').innerHTML=d.rows?.length?d.rows.map(card).join(''):empty('Tudo em dia. Nenhuma pendência aberta.');pager('pendingPager','pending',d.total||0);}
+ if(!full||state.offset.pending===0)$('urgentList').innerHTML=d.rows?.length?d.rows.slice(0,4).map(p=>`<div class="urgent-item"><div class="urgent-avatar">${initials(p.display_name)}</div><div><h4>${esc(p.display_name)}</h4><p>${esc(p.action_required)} · ${ago(p.created_at)}</p></div>${contactButton(p.contact_key,'Atender')}</div>`).join(''):empty('Tudo em dia. Nenhuma pendência aberta.');
 }
-function renderClients(rows=clients){
-  document.getElementById("clientTable").innerHTML=rows.map(c=>`<tr><td><div class="client-cell"><div class="avatar">${initials(c[0])}</div><strong>${c[0]}</strong></div></td><td>${c[1]}</td><td>${c[2]}</td><td><strong>${c[3]}</strong></td><td>${c[4]}</td><td><button class="table-link" onclick="toast('Perfil de ${c[0]} abrirá aqui na versão conectada.')">Abrir →</button></td></tr>`).join("");
+async function loadConversations(){const seq=(state.seq.list||0)+1;state.seq.list=seq;const search=$('conversationSearch').value;const d=await api('conversations',{p_limit:50,p_offset:state.offset.conversations,p_search:search});if(seq!==state.seq.list)return;
+ $('conversationCount').textContent=`${d.total||0} conversas`;$('conversationList').innerHTML=d.rows?.length?d.rows.map(c=>`<button class="conv-item ${c.contact_key===state.contact?'active':''}" data-contact="${esc(c.contact_key)}"><div class="avatar">${initials(c.customer_name)}</div><div class="conv-copy"><h4>${esc(c.customer_name)}</h4><p>${esc(c.author)}: ${esc(c.last_message)}</p></div><div class="conv-meta"><small>${ago(c.last_message_at)}</small><span class="author-tag ${esc(c.responsible)}">${c.responsible==='nayara'?'Nayara':c.responsible==='paused'?'Pausada':'Iana'}</span></div></button>`).join(''):empty('Nenhuma conversa encontrada.');pager('conversationPager','conversations',d.total||0);
+ if(state.contact)await loadConversation(state.contact,true);else if(d.rows?.[0])await loadConversation(d.rows[0].contact_key);
 }
-function renderFinance(){
-  document.getElementById("financeTable").innerHTML=finance.map(f=>`<tr><td><strong>${f[0]}</strong></td><td>${f[1]}</td><td><span class="status ${f[2]==="Pago"?"confirmado":f[2]==="Orçamento"?"solicitacao":"aguardando"}">${f[2]}</span></td><td><strong>${f[3]}</strong></td><td>${f[4]}</td><td>${f[5]}</td></tr>`).join("");
+async function openContact(key){if(state.contact!==key){state.detail=null;state.messageOffset=0;}state.contact=key;if(state.page!=='conversas')await goto('conversas');else await loadConversation(key);}
+function whatsapp(k){const phone=String(k||'').match(/^whatsapp:([0-9]{8,24})$/)?.[1];return phone?`https://wa.me/${phone}`:null;}
+function renderMessages(messages){return messages.map(m=>`<div class="message ${['client','iana','nayara'].includes(m.role)?m.role:'client'}"><div class="message-author">${esc(m.author)}</div><div class="message-body">${esc(String(m.content||'').replace(/^\*(?:Iana · Assistente virtual|Nayara)\*\s+/,''))}</div>${m.has_media?`<button class="btn secondary media-btn" data-action="media" data-message="${esc(m.id)}">${String(m.media_type).includes('audio')?'Ouvir áudio':'Abrir anexo'}</button>`:''}<div class="time">${dt(m.created_at)}</div></div>`).join('')||empty('Nenhuma mensagem armazenada.');}
+function deliveriesHtml(rows){return rows?.length?`<div class="delivery-warnings">${rows.map(o=>`<div><strong>${o.delivery_status==='pending'?'Envio em andamento':o.delivery_status==='failed'?'Envio recusado':'Conferir entrega no WhatsApp'}</strong><p>${esc(o.content)}</p>${o.review_allowed&&o.delivery_status!=='failed'?`<button class="btn secondary" data-action="review" data-target="${esc(o.target)}" data-message="${esc(o.id)}">Já conferi a entrega</button>`:''}</div>`).join('')}</div>`:'';}
+async function loadConversation(key,quiet=false){
+ const token=(state.seq.detail||0)+1;state.seq.detail=token;state.contact=key;
+ const same=$('conversationDetail').dataset.contact===key;if(!same){$('conversationDetail').innerHTML=empty('Carregando conversa…');$('conversationDetail').dataset.contact='';}
+ const d=await api('conversation',{p_contact_key:key,p_limit:50,p_offset:state.messageOffset});if(token!==state.seq.detail||key!==state.contact||state.page!=='conversas')return;
+ const p=d.profile||{},name=p.customer_name||p.contact_id||key,control=d.control||{},link=whatsapp(key);state.detail=d;
+ if(!same){
+ $('conversationDetail').dataset.contact=key;$('conversationDetail').innerHTML=`<div class="conv-detail-head"><div class="conv-person"><div class="avatar">${initials(name)}</div><div><h3>${esc(name)}</h3><p>${esc(p.whatsapp_phone||p.contact_id||key)}</p></div></div><span id="chatOwner" class="author-tag"></span></div><div class="conversation-tools"><button class="btn primary" data-action="takeover">Assumir conversa</button><button class="btn secondary" data-action="release">Devolver à Iana</button>${link?`<a href="${link}" target="_blank" rel="noopener noreferrer" class="btn secondary">Abrir WhatsApp</a>`:''}<button class="btn secondary" data-action="appointment">Agenda</button><button class="btn secondary" data-action="financial">Registrar valor</button></div><p id="controlHint" class="hint"></p><div id="chatPending"></div><div id="clientSnapshot" class="client-summary-strip"></div><div id="deliveryWarnings"></div><button class="btn secondary" id="olderMessages" data-action="older">Carregar mensagens anteriores</button><button class="btn secondary" id="newerMessages" data-action="newer">Mensagens mais recentes</button><div id="chatMessages" class="chat" aria-live="polite"></div>${link?`<form id="composeForm" class="compose"><label for="messageDraft">Responder como Nayara</label><textarea id="messageDraft" rows="3" maxlength="3500" placeholder="Escreva sua mensagem…"></textarea><div class="compose-footer"><small>A assinatura Nayara será incluída. O envio assume a conversa por 2 horas.</small><button class="btn primary" type="submit" id="sendMessageBtn">Enviar</button></div><p id="sendStatus" role="status"></p></form>`:''}<details class="client-facts"><summary>Ficha da cliente e histórico</summary><div id="clientFacts"></div><button class="btn secondary" data-action="note">Editar observações</button><div id="actionHistory"></div></details>`;
+ if(link){$('messageDraft').value=state.drafts.get(key)||'';$('messageDraft').oninput=e=>state.drafts.set(key,e.target.value);$('composeForm').onsubmit=e=>{e.preventDefault();sendMessage(key);};}
+ }
+ $('chatOwner').textContent=control.responsible==='nayara'?'Nayara atendendo':control.responsible==='paused'?'Iana pausada':'Iana atendendo';$('chatOwner').className='author-tag '+(control.responsible||'iana');
+ $('controlHint').textContent=control.human_control?`A Iana está pausada até ${dt(control.silent_until)}. Você pode devolvê-la antes.`:control.paused?'Há uma pausa ativa nesta conversa.':'A Iana pode responder às próximas mensagens.';
+ $('chatPending').innerHTML=d.handoff?.id?`<div class="handoff-inline"><span>${esc(d.handoff.summary||'Pendência aberta')}</span><button class="btn secondary" data-action="resolve" data-handoff="${esc(d.handoff.id)}" data-key="${esc(key)}">Concluir pendência</button></div>`:'';
+ const active=(d.financial||[]).filter(f=>f.record_status==='active'),quote=active.find(f=>f.financial_type==='quote');
+ $('clientSnapshot').innerHTML=`<div><span>Último serviço</span><strong>${esc(p.last_service_name||'Sem registro')}</strong></div><div><span>Próximo / último horário</span><strong>${dt(p.appointment_at)}</strong></div><div><span>Orçamento recente</span><strong>${quote?money(quote.amount_cents):'—'}</strong></div><div><span>Total pago líquido</span><strong>${money(p.lifetime_paid_cents)}</strong></div>`;
+ $('deliveryWarnings').innerHTML=deliveriesHtml(d.deliveries);$('olderMessages').hidden=state.messageOffset+50>=d.total_messages;$('newerMessages').hidden=state.messageOffset===0;
+ const chat=$('chatMessages'),nearBottom=chat.scrollHeight-chat.scrollTop-chat.clientHeight<80,oldScroll=chat.scrollTop,html=renderMessages(d.messages||[]);if(chat.innerHTML!==html){chat.innerHTML=html;chat.scrollTop=!quiet||nearBottom?chat.scrollHeight:oldScroll;}
+ $('clientFacts').innerHTML=`<h4>Preferências e observações</h4><p class="preserve-lines">${esc(d.note?.notes||'Nenhuma observação registrada.')}</p><h4>Atendimentos e agenda</h4>${d.recent_services?.length?d.recent_services.map(e=>`<p>${dt(e.event_at)} · ${esc(label(e.event_type))} · ${esc(e.service_name||'Serviço')}</p>`).join(''):empty('Sem histórico de serviços.')}<h4>Valores registrados</h4>${active.length?active.map(f=>`<p>${date(f.event_at)} · ${esc(label(f.financial_type))}: <strong>${money(f.amount_cents)}</strong> · ${esc(f.service_name||'Sem serviço vinculado')}</p>`).join(''):empty('Sem valores registrados.')}<h4>Informações identificadas na conversa</h4>${(d.facts||[]).filter(f=>f.status==='active').slice(0,10).map(f=>`<p>${esc(f.source_message_text||[f.fact_type,typeof f.fact_value==='string'?f.fact_value:JSON.stringify(f.fact_value)].join(': '))}</p>`).join('')||empty('Nenhuma informação adicional registrada.')}`;
+ $('actionHistory').innerHTML='<h4>Ações recentes</h4>'+(d.history||[]).map(h=>`<div class="audit-row"><span>${dt(h.created_at)} · ${esc(label(h.action))}</span>${['ignore_handoff','resolve_handoff'].includes(h.action)?`<button class="link-btn" data-action="reopen" data-handoff="${esc(h.result.handoff_id)}" data-key="${esc(key)}">Reabrir</button>`:''}</div>`).join('');
 }
-function gotoPage(page){
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-  document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("active"));
-  document.getElementById(`page-${page}`).classList.add("active");
-  document.querySelector(`.nav-item[data-page="${page}"]`)?.classList.add("active");
-  document.getElementById("pageTitle").textContent=pages[page][0];
-  document.getElementById("pageSubtitle").textContent=pages[page][1];
-  window.scrollTo({top:0,behavior:"smooth"});
-  closeDrawer();
+async function sendMessage(key){if(key!==state.contact)return;const text=$('messageDraft').value.trim();if(!text)return;const btn=$('sendMessageBtn');if(btn.disabled)return;btn.disabled=true;$('sendStatus').textContent='Enviando…';
+ try{const r=await mutate('send_message',{p_contact_key:key,text});if(r.delivery_status==='sent'){state.drafts.delete(key);if(key===state.contact){$('messageDraft').value='';$('sendStatus').textContent='Mensagem enviada como Nayara.';}}
+ else if(key===state.contact)$('sendStatus').textContent='Entrega ainda não confirmada. Confira no WhatsApp antes de repetir.';
+ await afterAction('Resultado do envio atualizado.');
+ }catch(e){if(key===state.contact&&$('sendStatus'))$('sendStatus').textContent=humanError(e);try{await loadConversation(key,true);}catch(ignored){}}finally{if(key===state.contact&&$('sendMessageBtn'))$('sendMessageBtn').disabled=false;}
 }
-function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(window._toast);window._toast=setTimeout(()=>t.classList.remove("show"),2600)}
-function closeDrawer(){document.getElementById("sidebar").classList.remove("open");document.getElementById("drawerOverlay").classList.remove("open")}
-
-document.querySelectorAll(".nav-item").forEach(b=>b.onclick=()=>gotoPage(b.dataset.page));
-document.querySelectorAll("[data-goto]").forEach(b=>b.onclick=()=>gotoPage(b.dataset.goto));
-document.getElementById("menuBtn").onclick=()=>{document.getElementById("sidebar").classList.toggle("open");document.getElementById("drawerOverlay").classList.toggle("open")};
-document.getElementById("drawerOverlay").onclick=closeDrawer;
-document.getElementById("refreshBtn").onclick=()=>toast("Dados atualizados — modo demonstração.");
-document.getElementById("clientSearch").oninput=e=>{const q=e.target.value.toLowerCase();renderClients(clients.filter(c=>c.join(" ").toLowerCase().includes(q)))};
-document.getElementById("globalSearch").oninput=e=>{if(e.target.value.length>2) toast(`Busca preparada para: "${e.target.value}"`)};
-document.querySelectorAll("[data-conv-filter]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-conv-filter]").forEach(x=>x.classList.remove("active"));b.classList.add("active");renderConversationList(b.dataset.convFilter)});
-document.getElementById("newAppointmentBtn").onclick=()=>document.getElementById("appointmentModal").classList.add("open");
-document.querySelectorAll(".close-modal").forEach(x=>x.onclick=()=>document.getElementById("appointmentModal").classList.remove("open"));
-document.getElementById("appointmentForm").onsubmit=e=>{e.preventDefault();document.getElementById("appointmentModal").classList.remove("open");toast("Registro salvo em modo demonstração.")};
-document.getElementById("appointmentModal").onclick=e=>{if(e.target.id==="appointmentModal")e.currentTarget.classList.remove("open")};
-document.querySelectorAll("[data-setting]").forEach(input=>{
-  const k=`iana_setting_${input.dataset.setting}`;
-  if(localStorage.getItem(k)!==null) input.checked=localStorage.getItem(k)==="true";
-  input.onchange=()=>{localStorage.setItem(k,input.checked);toast(`${input.closest("label").querySelector("strong").textContent}: ${input.checked?"ativado":"desativado"} (demo)`)};
-});
-const fmt=new Intl.DateTimeFormat("pt-BR",{weekday:"long",day:"2-digit",month:"long"});
-document.getElementById("todayLabel").textContent=fmt.format(new Date()).toUpperCase();
-
-renderUrgent();renderTodayAgenda();renderConversationList();renderPending();renderAgenda();renderClients();renderFinance();
-
-if("serviceWorker" in navigator && location.protocol.startsWith("http")) navigator.serviceWorker.register("service-worker.js").catch(()=>{});
+async function afterAction(message){toast(message);try{await refresh();status(true,'Conectado');}catch(e){status(false,'Atualização pendente');toast(message+' A tela ainda precisa ser atualizada.');}}
+function field(name,title,type='text',value='',extra=''){return `<label>${esc(title)}<input name="${esc(name)}" type="${type}" value="${esc(value)}" ${extra}></label>`;}
+function select(name,title,options,value=''){return `<label>${esc(title)}<select name="${name}">${options.map(([v,t])=>`<option value="${esc(v)}" ${v===value?'selected':''}>${esc(t)}</option>`).join('')}</select></label>`;}
+let dialogHandler=null,dialogVersion=0;
+function dialog(title,html,submit,handler){dialogVersion++;$('dialogTitle').textContent=title;$('dialogFields').innerHTML=html;$('dialogError').textContent='';$('dialogSubmit').textContent=submit;$('dialogSubmit').hidden=!handler;$('dialogSubmit').disabled=false;dialogHandler=handler;$('actionDialog').showModal();}
+function closeDialog(){if($('dialogSubmit').disabled)return;dialogVersion++;$('actionDialog').close();for(const url of mediaUrls)URL.revokeObjectURL(url);mediaUrls.clear();}
+const mediaUrls=new Set();
+$('actionForm').onsubmit=async e=>{e.preventDefault();if(!dialogHandler||$('dialogSubmit').disabled)return;$('dialogSubmit').disabled=true;try{await dialogHandler(Object.fromEntries(new FormData(e.target)));$('dialogSubmit').disabled=false;closeDialog();}catch(err){$('dialogError').textContent=humanError(err);}finally{$('dialogSubmit').disabled=false;}};
+$('actionDialog').addEventListener('cancel',e=>{if($('dialogSubmit').disabled)e.preventDefault();});
+function localInput(v){if(!v)return '';const parts=new Intl.DateTimeFormat('sv-SE',{timeZone:TZ,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date(v));return parts.replace(' ','T');}
+function cents(v){const raw=String(v||'').trim().replace(/\s|R\$/g,'');if(!/^(?:\d+|\d{1,3}(?:\.\d{3})+)(?:,\d{1,2})?$/.test(raw))throw new Error('invalid_amount');const n=Math.round(Number(raw.replace(/\./g,'').replace(',','.'))*100);if(!Number.isSafeInteger(n)||n<=0||n>2147483647)throw new Error('invalid_amount');return n;}
+async function action(name,button){const key=button.dataset.key||state.contact;const d=state.detail,p=d?.profile||{};
+ if(name==='resolve'||name==='ignore'||name==='reopen'){
+  const op=name==='resolve'?'resolve_handoff':name==='ignore'?'ignore_handoff':'reopen_handoff';
+  dialog(name==='resolve'?'Concluir pendência':name==='ignore'?'Remover da fila':'Reabrir pendência',name==='ignore'?'<label>Motivo<textarea name="reason" maxlength="500" required placeholder="Ex.: duplicada, spam ou já atendida"></textarea></label>':'<p>Esta ação atualiza a fila. O controle da conversa continua como está.</p>',name==='reopen'?'Reabrir':'Confirmar',async f=>{await mutate(op,{p_contact_key:key,p_handoff_id:button.dataset.handoff,...(name==='ignore'?{p_reason:f.reason}:{})});await afterAction(name==='reopen'?'Pendência reaberta.':'Fila atualizada.');});return;
+ }
+ if(!key||!d)return;
+ if(name==='takeover'){
+  button.disabled=true;try{await mutate('takeover',{p_contact_key:key});if(!state.drafts.get(key))state.drafts.set(key,'Oi! Aqui é a Nayara. Vou continuar seu atendimento 😊');if(key===state.contact&&$('messageDraft')&&!$('messageDraft').value)$('messageDraft').value=state.drafts.get(key)||'';await afterAction('Você assumiu a conversa por 2 horas. A apresentação está pronta para revisar e enviar.');}catch(e){toast(humanError(e));}finally{button.disabled=false;}return;
+ }
+ if(name==='release'){dialog('Devolver à Iana','<p>A assistente poderá responder às próximas mensagens da cliente. As pendências abertas continuam na fila.</p>','Devolver',async()=>{await mutate('release',{p_contact_key:key});await afterAction('Atendimento devolvido à Iana.');});return;}
+ if(name==='older'||name==='newer'){state.messageOffset=Math.max(0,state.messageOffset+(name==='older'?50:-50));await loadConversation(key);return;}
+ if(name==='note'){const version=d.note?.updated_at||'';dialog('Preferências e observações',`<label>O que é útil lembrar sobre esta cliente?<textarea name="notes" rows="7" maxlength="5000">${esc(d.note?.notes||'')}</textarea></label>`,'Salvar',async f=>{await mutate('save_note',{p_contact_key:key,notes:f.notes,expected_updated_at:version});await afterAction('Observações salvas.');});return;}
+ if(name==='appointment'){
+  const active=['confirmado','confirmed','agendado'].includes(p.appointment_status)&&p.appointment_at;
+  const ops=active?[['reschedule','Remarcar'],['complete','Marcar como realizado'],['cancel','Cancelar'],['no_show','Marcar falta']]:[['confirm','Confirmar horário']];
+  dialog('Agenda · '+(p.customer_name||p.contact_id||'Cliente'),select('operation','Ação',ops)+field('appointment_at','Data e hora · Joinville','datetime-local',active?localInput(p.appointment_at):'')+select('service_key','Serviço',[['','Informar serviço abaixo'],...(d.services||[]).map(s=>[s.service_key,s.service_name])],p.primary_service_key||'')+field('service_name','Serviço, se não estiver na lista','text',p.primary_service_name||'')+'<label>Observação<textarea name="notes" maxlength="1000"></textarea></label><p class="hint">Salva no CRM. Use a conversa para avisar a cliente. O horário exige confirmação da Nayara.</p>','Salvar agenda',async f=>{const at=['confirm','reschedule'].includes(f.operation)?(f.appointment_at?f.appointment_at+':00-03:00':null):null;await mutate('appointment',{p_contact_key:key,operation:f.operation,appointment_at:at,service_key:f.service_key,service_name:f.service_name,notes:f.notes,expected_appointment_at:p.appointment_at||null,expected_status:p.appointment_status||''});await afterAction('Agenda atualizada.');});return;
+ }
+ if(name==='financial'){
+  dialog('Registrar valor · '+(p.customer_name||p.contact_id||'Cliente'),select('financial_type','Tipo',[['paid','Pagamento recebido'],['quote','Orçamento'],['charged','Cobrança'],['discount','Desconto'],['refund','Reembolso']])+field('amount','Valor em reais','text','','required inputmode="decimal" placeholder="150,00"')+select('payment_method','Forma',[['','Não informado'],['pix','Pix'],['dinheiro','Dinheiro'],['credito','Cartão de crédito'],['debito','Cartão de débito'],['outro','Outro']])+field('service_name','Serviço','text',p.primary_service_name||p.last_service_name||'')+field('event_at','Data do registro · Joinville','datetime-local',localInput(new Date()),'required')+select('link_appointment','Vincular ao horário registrado?',p.appointment_at?[['yes',dt(p.appointment_at)],['no','Sem vínculo']]:[['no','Sem horário registrado']])+'<label>Observação<textarea name="notes" maxlength="1000"></textarea></label>','Registrar',async f=>{await mutate('financial',{p_contact_key:key,financial_type:f.financial_type,amount_cents:cents(f.amount),payment_method:f.payment_method,service_name:f.service_name,service_key:f.service_name===p.primary_service_name?p.primary_service_key||'':'',event_at:f.event_at+':00-03:00',appointment_at:f.link_appointment==='yes'?p.appointment_at:null,notes:f.notes});await afterAction('Valor registrado no histórico da cliente.');});return;
+ }
+ if(name==='review'){dialog('Conferir entrega','<p>Abra o WhatsApp e confira se esta mensagem realmente chegou à conversa. Isso não envia uma nova mensagem.</p>'+select('outcome','Resultado',[['sent','A mensagem aparece como enviada'],['not_sent','A mensagem não foi enviada']])+'<label>O que você conferiu?<textarea name="notes" minlength="5" maxlength="500" required></textarea></label>','Registrar conferência',async f=>{await mutate('reconcile_message',{p_contact_key:key,target:button.dataset.target,message_id:button.dataset.message,outcome:f.outcome,notes:f.notes});await afterAction('Conferência registrada.');});return;}
+ if(name==='media'){
+  const mid=button.dataset.message;dialog('Anexo da conversa',empty('Recuperando anexo…'),'',null);const mediaVersion=dialogVersion;
+  try{const media=await api('media',{p_contact_key:key,message_id:mid});if(!$('actionDialog').open||mediaVersion!==dialogVersion)return;
+   if(!media.available){$('dialogFields').innerHTML=empty('Este anexo não está mais disponível aqui. Abra a conversa no WhatsApp.');return;}
+   const mime=String(media.mime||'').split(';')[0];if(!/^(image\/(jpeg|png|webp|gif)|audio\/(ogg|mpeg|mp4|wav|webm|opus)|video\/(mp4|webm)|application\/pdf)$/.test(mime)||String(media.base64).length>28*1024*1024)throw new Error('invalid_media');
+   const bytes=Uint8Array.from(atob(media.base64),c=>c.charCodeAt(0)),url=URL.createObjectURL(new Blob([bytes],{type:mime}));mediaUrls.add(url);
+   $('dialogFields').innerHTML=mime.startsWith('image/')?`<img class="attachment-image" src="${url}" alt="Imagem enviada na conversa">`:mime.startsWith('audio/')?`<audio controls src="${url}"></audio>`:mime.startsWith('video/')?`<video class="attachment-image" controls src="${url}"></video>`:`<a class="btn primary" href="${url}" download="anexo.pdf">Baixar PDF</a>`;
+  }catch(e){if(mediaVersion!==dialogVersion)return;$('dialogFields').innerHTML=empty('Não foi possível abrir este anexo. Confira a conversa no WhatsApp.');}return;
+ }
+}
+async function loadClients(){const token=(state.seq.clients||0)+1;state.seq.clients=token;const d=await api('clients',{p_limit:50,p_offset:state.offset.clients,p_search:$('clientSearch').value});if(token!==state.seq.clients)return;$('clientTable').innerHTML=d.rows?.length?d.rows.map(c=>`<tr><td>${contactButton(c.contact_key,c.customer_name||c.contact_id)}</td><td>${esc(c.primary_service_name||c.last_service_name||'—')}</td><td>${ago(c.last_activity_at)}</td><td>${money(c.lifetime_paid_cents)}</td><td>${esc(c.relationship_status||'—')}</td><td>${esc(c.attention_priority||'—')}</td></tr>`).join(''):'<tr><td colspan="6">Nenhuma cliente encontrada.</td></tr>';pager('clientPager','clients',d.total||0);}
+function weekRange(){const current=new Date(ymd(Date.now())+'T12:00:00Z'),weekday=(current.getUTCDay()+6)%7;current.setUTCDate(current.getUTCDate()-weekday+state.week*7);const end=new Date(current);end.setUTCDate(end.getUTCDate()+7);return {start:current.toISOString().slice(0,10),end:end.toISOString().slice(0,10)};}
+async function loadAgenda(){const token=(state.seq.agenda||0)+1;state.seq.agenda=token;const range=weekRange(),d=await api('agenda',{p_start:range.start,p_end:range.end});if(token!==state.seq.agenda)return;const days=Array.from({length:7},(_,i)=>{const x=new Date(range.start+'T12:00:00Z');x.setUTCDate(x.getUTCDate()+i);return x;});$('agendaRange').textContent=date(days[0])+' a '+date(days[6]);$('agendaBoard').innerHTML=days.map(day=>{const rows=(d.appointments||[]).filter(a=>ymd(a.appointment_at)===ymd(day));return `<section class="live-day"><div class="live-day-head"><strong>${format(day,{weekday:'short'})}</strong><span>${format(day,{day:'2-digit',month:'2-digit'})}</span></div>${rows.length?rows.map(a=>`<div class="live-appointment"><strong>${time(a.appointment_at)} · ${esc(a.customer_name)}</strong><small>${esc(a.service_name||'Atendimento')} · ${esc(label(a.appointment_status))}</small>${contactButton(a.contact_key,'Gerenciar')}</div>`).join(''):empty('Sem horário registrado')}</section>`;}).join('');$('agendaRequests').innerHTML=d.requests?.length?d.requests.map(r=>`<article class="pending-card"><h3>${esc(r.customer_name)}</h3><p>${esc(r.service_name||'Serviço a definir')} · ${esc(r.preferred_day||'Dia a definir')}</p>${contactButton(r.contact_key,'Confirmar com a cliente')}</article>`).join(''):empty('Nenhuma solicitação de horário aguardando você.');}
+async function loadFinance(){const scope=state.finance,d=await api('finance',{p_scope:scope,p_limit:50,p_offset:state.offset.finance});if(scope!==state.finance)return;const s=d.summary||{};$('fPaid').textContent=money(Number(s.paid_cents||0)-Number(s.refund_cents||0));$('fPaidCount').textContent=`${s.paid_count||0} pagamentos, descontados os reembolsos`;$('fCharged').textContent=money(s.charged_cents);$('fChargedCount').textContent=`${s.charged_count||0} cobranças`;$('fOpen').textContent=money(s.refund_cents);$('fQuotes').textContent=money(s.quote_cents);$('fQuoteCount').textContent=`${s.quote_count||0} orçamentos`;$('financeTable').innerHTML=d.rows?.length?d.rows.map(f=>`<tr><td>${dt(f.event_at)}</td><td>${contactButton(f.contact_key,f.customer_name)}</td><td>${esc(f.service_name||'—')}${f.metadata?.appointment_at?`<small>${dt(f.metadata.appointment_at)}</small>`:''}</td><td>${esc(label(f.financial_type))}</td><td>${money(f.amount_cents)}</td><td>${esc(f.payment_method||'—')}</td><td>${esc(f.source_role==='nayara'?'Nayara':f.source_role||'Registro existente')}</td></tr>`).join(''):'<tr><td colspan="7">Nenhum valor registrado no período.</td></tr>';pager('financePager','finance',d.total||0);}
+async function loadInsights(){const d=await api('insights'),tot=d.totals||{};$('iReactivation').textContent=tot.reactivation??d.reactivation?.length??0;$('iOpportunities').textContent=tot.opportunities??d.opportunities?.length??0;$('iAttention').textContent=tot.attention??d.attention?.length??0;
+ const groups=[['Orçamentos para revisar',d.opportunities,x=>`${x.service_name||'Serviço'} · ${money(x.amount_cents)}`],['Clientes que precisam de atenção',d.attention,x=>x.attention_reason||x.attention_priority],['Possíveis retornos',d.reactivation,x=>`${x.last_service_name||'Último serviço'} · ${date(x.last_service_at)}`]];
+ const html=groups.map(([title,rows,desc])=>`<article class="insight"><h3>${title}</h3>${rows?.length?rows.slice(0,8).map(x=>`<div class="opportunity"><strong>${esc(x.customer_name)}</strong><p>${esc(desc(x))}</p>${contactButton(x.contact_key,'Ver histórico')}</div>`).join(''):empty('Nenhuma sugestão neste momento.')}</article>`).join('');$('insightsGrid').innerHTML=html;$('iSummary').innerHTML=`<p>${esc(d.note||'Confira o histórico antes de entrar em contato.')}</p><div class="insights-grid">${html}</div>`;}
+async function loadHealth(){const d=await api('health');$('healthList').innerHTML=(d.metrics||d.health||[]).slice(0,15).map(x=>`<div class="health-item"><strong>${esc(x.metric_type||x.metric_name||x.status||'Registro')}</strong><p>${esc(x.metric_value??x.value??x.details??'')}</p><small>${dt(x.checked_at||x.created_at||x.measured_at)}</small></div>`).join('')||empty('Nenhum diagnóstico recente registrado.');const settings=Array.isArray(d.settings)?d.settings:Object.entries(d.settings||{}).map(([setting_key,setting_value])=>({setting_key,setting_value}));$('settingsList').innerHTML=settings.map(x=>`<div class="health-item"><strong>${esc(x.setting_key)}</strong><span>${esc(x.setting_value)}</span></div>`).join('')||empty('Nenhuma configuração disponível.');}
+document.addEventListener('click',async e=>{const b=e.target.closest('button,[data-goto]');if(!b||b.disabled)return;try{
+ if(b.dataset.contact){await openContact(b.dataset.contact);return;}
+ if(b.dataset.page){await goto(b.dataset.page);return;}
+ if(b.dataset.goto){await goto(b.dataset.goto);return;}
+ if(b.dataset.action){await action(b.dataset.action,b);return;}
+ if(b.dataset.pageList){const kind=b.dataset.pageList;state.offset[kind]=Math.max(0,state.offset[kind]+Number(b.dataset.delta));await (kind==='conversations'?loadConversations():kind==='pending'?loadPending(true):kind==='finance'?loadFinance():loadClients());return;}
+ if(b.dataset.finance){state.finance=b.dataset.finance;state.offset.finance=0;document.querySelectorAll('[data-finance]').forEach(x=>x.classList.toggle('active',x===b));await loadFinance();}
+ }catch(err){toast(humanError(err));}});
+const debounce=(fn,ms=350)=>{let timer;return ()=>{clearTimeout(timer);timer=setTimeout(()=>fn().catch(e=>toast(humanError(e))),ms);};};
+$('conversationSearch').oninput=debounce(async()=>{state.offset.conversations=0;await loadConversations();});$('clientSearch').oninput=debounce(async()=>{state.offset.clients=0;await loadClients();});
+$('saveConnectionBtn').onclick=async()=>{const b=$('saveConnectionBtn');b.disabled=true;try{const url=new URL($('apiUrl').value.trim());if(url.protocol!=='https:')throw new Error('https_required');gate('Testando conexão…');await connect({url:url.href,key:$('apiKey').value.trim()});gate('');}catch(e){gate(e.message==='https_required'?'Use uma URL HTTPS.':humanError(e));}finally{b.disabled=false;}};
+$('cancelConnectionBtn').onclick=()=>{$('setupScreen').classList.add('hidden');};
+$('connectionBtn').onclick=$('connectionBtnSystem').onclick=openSettings;
+$('testConnectionBtn').onclick=async()=>{try{const p=await api('ping');if(!String(p.version).startsWith('53.'))throw new Error('backend_version');toast('Conexão funcionando.');}catch(e){toast(humanError(e));}};
+$('refreshBtn').onclick=async()=>{try{await refresh();status(true,'Conectado');toast('Dados atualizados.');}catch(e){status(false,'Falha ao atualizar');toast(humanError(e));}};
+$('logoutBtn').onclick=()=>dialog('Desconectar painel','<p>Remove a conexão deste navegador. As conversas e o atendimento da Iana continuam funcionando.</p>','Desconectar',async()=>{localStorage.removeItem(LS_URL);localStorage.removeItem(LS_KEY);sessionStorage.removeItem('iana_v53_retries');clearTimeout(state.timer);location.reload();});
+$('menuBtn').onclick=()=>{$('sidebar').classList.toggle('open');$('drawerOverlay').classList.toggle('open');};$('drawerOverlay').onclick=()=>{$('sidebar').classList.remove('open');$('drawerOverlay').classList.remove('open');};
+$('closeDialogBtn').onclick=$('cancelDialogBtn').onclick=closeDialog;
+for(const [button,delta] of [['agendaPrevBtn',-1],['agendaNextBtn',1],['agendaTodayBtn',0]])$(button).onclick=()=>{state.week=delta===0?0:state.week+delta;loadAgenda().catch(e=>toast(humanError(e)));};
+document.addEventListener('visibilitychange',()=>{if(document.hidden)clearTimeout(state.timer);else{state.lastFull=0;poll();}});
+$('todayLabel').textContent=format(Date.now(),{weekday:'long',day:'2-digit',month:'long'});
+async function boot(){const c=config();if(!c.url||!c.key){openSettings();return;}try{await connect(c);}catch(e){openSettings();gate(humanError(e));}}
+boot();
+})();

@@ -1,0 +1,2 @@
+// Retire only the old worker registered for this panel. Never reload automatically.
+(async()=>{if(!('serviceWorker' in navigator))return;try{const scope=new URL('./',location.href).href;for(const r of await navigator.serviceWorker.getRegistrations()){if(r.scope===scope){const src=r.active?.scriptURL||r.waiting?.scriptURL||r.installing?.scriptURL||'';if(new URL(src,scope).pathname===new URL('service-worker.js',scope).pathname)await r.unregister();}}}catch(e){}})();
