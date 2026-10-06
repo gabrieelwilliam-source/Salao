@@ -1,48 +1,48 @@
-# Iana Gestão LIVE 2.1.3 — CACHE KILLER
+# Iana Gestão — Sistema para Salão
 
-Esta versão existe para remover o cache da versão antiga "MODO DEMONSTRAÇÃO".
+Aplicação web desenvolvida para apoiar rotinas de atendimento, agenda e gestão de um salão.
 
-## SUBA TODOS estes arquivos para a RAIZ do repositório
+Este repositório representa um projeto de aplicação interna, diferente das landing pages do meu portfólio comercial.
 
-- index.html
-- 404.html
-- app-live-2.1.3.js
-- styles-2.1.3.css
-- manifest.json
-- service-worker.js
-- version.txt
-- .nojekyll
+## Objetivo
 
-Pode apagar da raiz os antigos:
-- app.js
-- app-live.js
-- styles.css
+Centralizar funções operacionais do salão em uma interface simples de usar no dia a dia.
 
-## Depois do commit
-Espere o GitHub Pages concluir o deploy.
+## Destaques
 
-Abra PRIMEIRO usando um parâmetro novo:
+- interface web responsiva;
+- gestão de atendimento;
+- organização de agenda;
+- funcionamento como PWA;
+- versionamento e atualização de cache;
+- preparação para uso em dispositivos móveis;
+- integração com serviços externos.
 
-`https://SEU-SITE.github.io/SEU-REPO/?v=213`
+## Tecnologias
 
-Esse endereço não corresponde à entrada antiga que o Service Worker cacheou.
+- HTML
+- CSS
+- JavaScript
+- Service Worker
+- PWA
+- Supabase
 
-A nova página:
-1. apaga caches antigos;
-2. desregistra Service Workers antigos;
-3. instala temporariamente um Service Worker "cache killer";
-4. o cache killer também se desregistra sozinho.
+## Meu papel
 
-## Como confirmar
-Você DEVE ver:
-- `Salão Nayara · LIVE 2.1.3` no menu lateral;
-- um selo escuro `LIVE 2.1.3` no canto inferior direito.
+- desenvolvimento da interface;
+- evolução das versões;
+- correções de cache e publicação;
+- experiência mobile;
+- integração da aplicação;
+- manutenção do front-end.
 
-A URL:
-`.../version.txt?v=213`
+## Observação
 
-deve mostrar:
-`IANA GESTAO LIVE 2.1.3 CACHE KILLER`
+Este repositório contém histórico de versões de uma aplicação em evolução. Para avaliar meu trabalho especificamente com **landing pages e sites comerciais**, recomendo começar pelos projetos abaixo.
 
-Se `version.txt` mostrar 2.1.3 mas a página continuar demo, é cache local.
-Se `version.txt` der 404 ou conteúdo antigo, o GitHub Pages está publicando branch/pasta diferente da que você atualizou.
+## Portfólio principal
+
+- [Landing Page FR Distribuidora](https://github.com/gabrieelwilliam-source/landingpages)
+- [Zion Automações](https://github.com/gabrieelwilliam-source/Site-automacao)
+- [Horizonte Prime](https://github.com/gabrieelwilliam-source/HorizontePrime)
+- [Nayara Brososki](https://github.com/gabrieelwilliam-source/Nayara-Brososki)
