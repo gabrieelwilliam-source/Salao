@@ -1,0 +1,11 @@
+{
+  "name": "iana-gestao-salao",
+  "private": true,
+  "version": "53.3.1",
+  "scripts": {
+    "test": "node tests/dashboard-integration.test.cjs"
+  },
+  "devDependencies": {
+    "jsdom": "^30.1.2"
+  }
+}

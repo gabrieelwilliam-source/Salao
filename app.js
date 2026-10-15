@@ -1,9 +1,12 @@
 /* Iana Gestão V53.3 PWA — no third-party runtime or live credentials in this bundle. */
-window.IANA_WEB_BUILD='53.3-pwa1';
+window.IANA_WEB_BUILD='53.3-zion-20261014.1';
 (() => {
 'use strict';
 const $=id=>document.getElementById(id),TZ='America/Sao_Paulo';
 const LS_URL='iana_n8n_api_url',LS_KEY='iana_n8n_access_key';
+const DEFAULT_API_URL="https://n8n.vps12198.panel.icontainer.cloud/webhook/zion-salao-nayara-painel";
+const INTEGRATION_ID='zion-salao-nayara-v53';
+function currentApiUrl(value){if(!value)return DEFAULT_API_URL;try{const u=new URL(value);const legacy=['/webhook/iana-web-live-v242-api','/webhook/zion-qa-salao-api_painel-iana-web-live-v242-api'];return u.origin==='https://n8n.vps12198.panel.icontainer.cloud'&&legacy.includes(u.pathname.replace(/\/$/,''))?DEFAULT_API_URL:value;}catch(e){return value;}}
 const state={page:'dashboard',contact:null,detail:null,finance:'today',week:0,offset:{conversations:0,pending:0,clients:0,finance:0},drafts:new Map(),seq:{},timer:null,syncBusy:false,cursor:0,lastFull:0,failures:0,connected:false,refresh:null,messageOffset:0,installPrompt:null};
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 const money=v=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Number(v||0)/100);
@@ -17,16 +20,16 @@ const initials=v=>String(v||'Cliente').split(/\s+/).slice(0,2).map(s=>s[0]||'').
 const empty=v=>`<div class="empty-state">${esc(v)}</div>`;
 const labels={confirmado:'Confirmado',confirmed:'Confirmado',agendado:'Agendado',realizado:'Realizado',cancelado:'Cancelado',faltou:'Faltou',aguardando_nayara:'Aguardando você',em_atendimento:'Em atendimento',resolvido:'Concluído',ignorado:'Removido',paid:'Pagamento',charged:'Cobrança',quote:'Orçamento',discount:'Desconto',refund:'Reembolso',takeover:'Nayara assumiu',release:'Devolvido à Iana',save_note:'Observações atualizadas',resolve_handoff:'Pendência concluída',ignore_handoff:'Pendência removida',reopen_handoff:'Pendência reaberta',appointment:'Agenda atualizada',financial:'Valor registrado',send_message:'Mensagem de Nayara',reconcile_message:'Entrega conferida'};
 const label=v=>labels[v]||v||'—';
-const errors={unauthorized:'A chave de acesso está incorreta.',connection_not_configured:'Configure a conexão do painel.',backend_version:'Atualize primeiro a API do painel para V53.',record_changed:'Este registro mudou. Feche esta janela, atualize os dados e tente novamente.',review_delivery_first:'Há um envio aguardando conferência. Verifique a entrega no WhatsApp antes de continuar.',handoff_not_open:'Esta pendência já foi encerrada. Atualize a fila.',another_handoff_open:'Esta cliente já tem outra pendência aberta.',handoff_cannot_reopen:'Esta pendência não pode ser reaberta.',invalid_amount:'Informe um valor maior que zero.',future_appointment_required:'Escolha uma data e um horário futuros.',appointment_not_active:'Este agendamento já mudou ou não está ativo.',appointment_not_started:'O horário do atendimento ainda não chegou.',time_already_booked:'Já existe um atendimento nesse horário.',service_required:'Informe o serviço.',delivery_still_running_or_already_reviewed:'O envio ainda pode estar em andamento ou já foi conferido.',request_id_conflict:'A tentativa anterior usa outros dados. Atualize antes de continuar.',invalid_message_length:'Escreva uma mensagem de até 3.500 caracteres.',note_too_long:'Use até 5.000 caracteres nas observações.'};
+const errors={integration_mismatch:'Esta conexão não corresponde ao painel atual do Salão Nayara.',backend_unavailable:'O painel está temporariamente sem acesso ao banco. Tente atualizar.',unknown_action:'Esta ação não está disponível nesta versão.',request_too_large:'A solicitação ficou muito grande. Reduza o texto e tente novamente.',invalid_request:'Não foi possível validar essa solicitação.',unauthorized:'A chave de acesso está incorreta.',connection_not_configured:'Configure a conexão do painel.',backend_version:'Atualize primeiro a API do painel para V53.',record_changed:'Este registro mudou. Feche esta janela, atualize os dados e tente novamente.',review_delivery_first:'Há um envio aguardando conferência. Verifique a entrega no WhatsApp antes de continuar.',handoff_not_open:'Esta pendência já foi encerrada. Atualize a fila.',another_handoff_open:'Esta cliente já tem outra pendência aberta.',handoff_cannot_reopen:'Esta pendência não pode ser reaberta.',invalid_amount:'Informe um valor maior que zero.',future_appointment_required:'Escolha uma data e um horário futuros.',appointment_not_active:'Este agendamento já mudou ou não está ativo.',appointment_not_started:'O horário do atendimento ainda não chegou.',time_already_booked:'Já existe um atendimento nesse horário.',service_required:'Informe o serviço.',delivery_still_running_or_already_reviewed:'O envio ainda pode estar em andamento ou já foi conferido.',request_id_conflict:'A tentativa anterior usa outros dados. Atualize antes de continuar.',invalid_message_length:'Escreva uma mensagem de até 3.500 caracteres.',note_too_long:'Use até 5.000 caracteres nas observações.'};
 function humanError(e){if(e?.name==='AbortError')return 'A conexão demorou a responder. Atualize para conferir o resultado antes de repetir a ação.';const m=String(e?.message||e);return errors[m]||(m.includes('Failed to fetch')?'Não foi possível acessar a API. Verifique a conexão e se o fluxo está ativo.':m.startsWith('HTTP')?'A API não respondeu corretamente. Tente atualizar.':m.includes('permission denied')?'A credencial do banco precisa de acesso às funções do painel. Consulte as instruções de instalação.':'Não foi possível concluir. Atualize e tente novamente.');}
 function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('toast').classList.remove('show'),6000);}
-function config(){return {url:localStorage.getItem(LS_URL)||'',key:localStorage.getItem(LS_KEY)||''};}
+function config(){return {url:currentApiUrl(localStorage.getItem(LS_URL)||''),key:localStorage.getItem(LS_KEY)||''};}
 function status(ok,msg){state.connected=ok;$('realtimeDot').className='status-dot '+(ok?'online':'offline');$('realtimeLabel').textContent=msg;$('realtimeDetail').textContent=msg;document.querySelectorAll('[data-live-label]').forEach(e=>e.textContent=msg);document.querySelectorAll('[data-live-dot]').forEach(e=>e.className='status-dot '+(ok?'online':'offline'));$('connectionWarning').classList.toggle('hidden',ok);$('connectionWarning').textContent=ok?'':'Dados podem estar desatualizados. '+msg;$('apiConnectionStatus').textContent=ok?'Conectado':'Sem confirmação';}
 async function api(action,params={},cfg=config()){
  if(!cfg.url||!cfg.key)throw new Error('connection_not_configured');
  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),action==='send_message'||action==='media'?45000:20000);
  try{const response=await fetch(cfg.url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({access_key:cfg.key,action,params}),cache:'no-store',signal:controller.signal});
- if(!response.ok)throw new Error('HTTP '+response.status);const body=await response.json();if(body?.ok!==true){const e=new Error(body?.error||'invalid_response');e.confirmedFailure=true;throw e;}return Object.hasOwn(body,'data')?body.data:body;
+ const body=await response.json().catch(()=>null);if(!response.ok||body?.ok!==true){const e=new Error(body?.error||(response.status===401?'unauthorized':'HTTP '+response.status));e.confirmedFailure=body?.ok===false;throw e;}return Object.hasOwn(body,'data')?body.data:body;
  }finally{clearTimeout(timer);}
 }
 function id(){return crypto.randomUUID().replace(/-/g,'');}
@@ -42,7 +45,7 @@ function stamp(){$('lastSyncLabel').textContent='Atualizado às '+format(new Dat
 function gate(message){$('gateMessage').textContent=message;}
 function openSettings(){const c=config();$('apiUrl').value=c.url;$('apiKey').value=c.key;$('cancelConnectionBtn').classList.toggle('hidden',!c.url);$('setupScreen').classList.remove('hidden');}
 async function connect(candidate){
- const p=await api('ping',{},candidate);if(!String(p.version||'').startsWith('53.'))throw new Error('backend_version');
+ const p=await api('ping',{},candidate);if(!String(p.version||'').startsWith('53.'))throw new Error('backend_version');if(p.integration?.id!==INTEGRATION_ID)throw new Error('integration_mismatch');
  // Persist only after the candidate has passed validation.
  localStorage.setItem(LS_URL,candidate.url);localStorage.setItem(LS_KEY,candidate.key);state.cursor=Number(p.latest_event_id||0);state.failures=0;
  $('setupScreen').classList.add('hidden');$('app').classList.remove('hidden');$('currentApiUrl').textContent=candidate.url;$('userLabel').textContent='Nayara';
@@ -167,7 +170,7 @@ $('conversationSearch').oninput=debounce(async()=>{state.offset.conversations=0;
 $('saveConnectionBtn').onclick=async()=>{const b=$('saveConnectionBtn');b.disabled=true;try{const url=new URL($('apiUrl').value.trim());if(url.protocol!=='https:')throw new Error('https_required');gate('Testando conexão…');await connect({url:url.href,key:$('apiKey').value.trim()});gate('');}catch(e){gate(e.message==='https_required'?'Use uma URL HTTPS.':humanError(e));}finally{b.disabled=false;}};
 $('cancelConnectionBtn').onclick=()=>{$('setupScreen').classList.add('hidden');};
 $('connectionBtn').onclick=$('connectionBtnSystem').onclick=openSettings;
-$('testConnectionBtn').onclick=async()=>{try{const p=await api('ping');if(!String(p.version).startsWith('53.'))throw new Error('backend_version');toast('Conexão funcionando.');}catch(e){toast(humanError(e));}};
+$('testConnectionBtn').onclick=async()=>{try{const p=await api('ping');if(!String(p.version).startsWith('53.'))throw new Error('backend_version');if(p.integration?.id!==INTEGRATION_ID)throw new Error('integration_mismatch');toast('Conexão funcionando.');}catch(e){toast(humanError(e));}};
 $('refreshBtn').onclick=async()=>{try{await refresh();status(true,'Conectado');toast('Dados atualizados.');}catch(e){status(false,'Falha ao atualizar');toast(humanError(e));}};
 $('logoutBtn').onclick=()=>dialog('Desconectar painel','<p>Remove a conexão deste navegador. As conversas e o atendimento da Iana continuam funcionando.</p>','Desconectar',async()=>{localStorage.removeItem(LS_URL);localStorage.removeItem(LS_KEY);sessionStorage.removeItem('iana_v53_retries');clearTimeout(state.timer);location.reload();});
 $('menuBtn').onclick=()=>{$('sidebar').classList.toggle('open');$('drawerOverlay').classList.toggle('open');};$('drawerOverlay').onclick=()=>{$('sidebar').classList.remove('open');$('drawerOverlay').classList.remove('open');};
@@ -197,3 +200,4 @@ $('todayLabel').textContent=format(Date.now(),{weekday:'long',day:'2-digit',mont
 async function boot(){const c=config();if(!c.url||!c.key){openSettings();return;}try{await connect(c);}catch(e){openSettings();gate(humanError(e));}}
 boot();
 })();
+

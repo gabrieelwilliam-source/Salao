@@ -1,35 +1,12 @@
-/* Iana Gestão PWA 1.0 — cacheia somente a interface, nunca a API ou as conversas. */
-const CACHE = 'iana-gestao-pwa-v1';
-const APP_SHELL = [
-  './', './index.html', './styles.css?v=533', './app.js?v=533',
-  './manifest.json?v=533', './icons/icon-192.png', './icons/icon-512.png',
-  './icons/apple-touch-icon.png'
-];
-
-self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
-});
-
-self.addEventListener('activate', event => {
-  event.waitUntil(caches.keys()
-    .then(keys => Promise.all(keys.filter(key => key.startsWith('iana-gestao-') && key !== CACHE).map(key => caches.delete(key))))
-    .then(() => self.clients.claim()));
-});
-
-self.addEventListener('fetch', event => {
-  const request = event.request;
-  if (request.method !== 'GET') return;
-  const url = new URL(request.url);
-  if (url.origin !== self.location.origin) return;
-  if (request.mode === 'navigate') {
-    event.respondWith(fetch(request).then(response => {
-      if (response.ok) caches.open(CACHE).then(cache => cache.put('./index.html', response.clone()));
-      return response;
-    }).catch(() => caches.match('./index.html')));
-    return;
-  }
-  event.respondWith(caches.match(request).then(cached => cached || fetch(request).then(response => {
-    if (response.ok) caches.open(CACHE).then(cache => cache.put(request, response.clone()));
-    return response;
-  })));
+/* Interface em cache; dados do salão continuam somente na API autenticada. */
+const CACHE='iana-gestao-zion-20261014-1';
+const APP_SHELL=['./','./index.html','./styles.css?v=20261014.1','./app.js?v=20261014.1','./cache-migration.js?v=20261014.1','./manifest.json?v=20261014.1','./icons/icon-192.png','./icons/icon-512.png','./icons/icon-maskable-512.png','./icons/apple-touch-icon.png'];
+const ASSETS=new Set(APP_SHELL.map(path=>new URL(path,self.registration.scope).href));
+self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(APP_SHELL)).then(()=>self.skipWaiting())));
+self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('iana-gestao-')&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
+self.addEventListener('fetch',event=>{
+ const request=event.request;if(request.method!=='GET')return;
+ const url=new URL(request.url);if(url.origin!==self.location.origin)return;
+ if(request.mode==='navigate'){event.respondWith(fetch(request).then(response=>{if(response.ok){const copy=response.clone();event.waitUntil(caches.open(CACHE).then(cache=>cache.put(new URL('./index.html',self.registration.scope).href,copy)));}return response;}).catch(()=>caches.match(new URL('./index.html',self.registration.scope).href)));return;}
+ if(ASSETS.has(url.href))event.respondWith(caches.match(request).then(cached=>cached||fetch(request)));
 });
