@@ -1,7 +1,7 @@
 {
   "name": "iana-gestao-salao",
   "private": true,
-  "version": "53.3.1",
+  "version": "53.3.2",
   "scripts": {
     "test": "node tests/dashboard-integration.test.cjs"
   },
