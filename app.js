@@ -1,12 +1,12 @@
 /* Iana Gestão V53.3 PWA — no third-party runtime or live credentials in this bundle. */
-window.IANA_WEB_BUILD='53.3-zion-20261014.1';
+window.IANA_WEB_BUILD='53.3-zion-20261014.2';
 (() => {
 'use strict';
 const $=id=>document.getElementById(id),TZ='America/Sao_Paulo';
 const LS_URL='iana_n8n_api_url',LS_KEY='iana_n8n_access_key';
 const DEFAULT_API_URL="https://n8n.vps12198.panel.icontainer.cloud/webhook/zion-salao-nayara-painel";
 const INTEGRATION_ID='zion-salao-nayara-v53';
-function currentApiUrl(value){if(!value)return DEFAULT_API_URL;try{const u=new URL(value);const legacy=['/webhook/iana-web-live-v242-api','/webhook/zion-qa-salao-api_painel-iana-web-live-v242-api'];return u.origin==='https://n8n.vps12198.panel.icontainer.cloud'&&legacy.includes(u.pathname.replace(/\/$/,''))?DEFAULT_API_URL:value;}catch(e){return value;}}
+function currentApiUrl(value){if(!value)return DEFAULT_API_URL;try{const u=new URL(value);const legacy=['/webhook/iana-web-live-v242-api','/webhook/zion-qa-salao-api_painel-iana-web-live-v242-api'];const knownOrigins=['https://n8n.vps12198.panel.icontainer.cloud','https://app.vps7376.panel.icontainer.cloud'];return knownOrigins.includes(u.origin)&&legacy.includes(u.pathname.replace(/\/$/,''))?DEFAULT_API_URL:value;}catch(e){return value;}}
 const state={page:'dashboard',contact:null,detail:null,finance:'today',week:0,offset:{conversations:0,pending:0,clients:0,finance:0},drafts:new Map(),seq:{},timer:null,syncBusy:false,cursor:0,lastFull:0,failures:0,connected:false,refresh:null,messageOffset:0,installPrompt:null};
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 const money=v=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Number(v||0)/100);
@@ -45,6 +45,7 @@ function stamp(){$('lastSyncLabel').textContent='Atualizado às '+format(new Dat
 function gate(message){$('gateMessage').textContent=message;}
 function openSettings(){const c=config();$('apiUrl').value=c.url;$('apiKey').value=c.key;$('cancelConnectionBtn').classList.toggle('hidden',!c.url);$('setupScreen').classList.remove('hidden');}
 async function connect(candidate){
+ candidate={...candidate,url:currentApiUrl(candidate.url)};
  const p=await api('ping',{},candidate);if(!String(p.version||'').startsWith('53.'))throw new Error('backend_version');if(p.integration?.id!==INTEGRATION_ID)throw new Error('integration_mismatch');
  // Persist only after the candidate has passed validation.
  localStorage.setItem(LS_URL,candidate.url);localStorage.setItem(LS_KEY,candidate.key);state.cursor=Number(p.latest_event_id||0);state.failures=0;

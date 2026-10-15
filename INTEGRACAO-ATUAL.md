@@ -1,6 +1,6 @@
 # Integração atual do Salão Nayara
 
-Versão do frontend: `53.3-zion-20261014.1`.
+Versão do frontend: `53.3-zion-20261014.2`.
 
 - API: `https://n8n.vps12198.panel.icontainer.cloud/webhook/zion-salao-nayara-painel`.
 - n8n: workflow `KNB6dJYZXzlRZXul`.
@@ -14,3 +14,5 @@ Versão do frontend: `53.3-zion-20261014.1`.
 - O service worker armazena somente a interface; nenhuma chamada de dados ou autenticação da API entra no cache.
 
 O backup anterior à integração está no branch `backup/painel-antes-integracao-20261014`.
+
+A migração também reconhece o servidor anterior `app.vps7376.panel.icontainer.cloud`, inclusive ao colar novamente a URL antiga na conexão. A chave só é persistida depois de confirmar a API nova.
